@@ -14,14 +14,15 @@
 
   /* ── Auth ── */
   #auth-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px;}
-  .auth-box{width:100%;max-width:380px;}
+  .auth-box{width:100%;max-width:380px;text-align:center;}
   .auth-icon{width:56px;height:56px;background:linear-gradient(135deg,var(--blue),var(--green));border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 20px;}
-  .auth-title{font-family:'DM Serif Display',serif;font-size:26px;text-align:center;margin-bottom:6px;}
-  .auth-sub{color:var(--dim);font-size:13px;text-align:center;margin-bottom:28px;}
-  .auth-error{background:#E74C3C18;border:1px solid #E74C3C44;border-radius:8px;padding:10px 14px;margin-bottom:16px;font-size:12px;color:#E74C3C;display:none;}
+  .auth-title{font-family:'DM Serif Display',serif;font-size:26px;margin-bottom:6px;}
+  .auth-sub{color:var(--dim);font-size:13px;margin-bottom:28px;line-height:1.6;}
+  .auth-error{background:#E74C3C18;border:1px solid #E74C3C44;border-radius:8px;padding:10px 14px;margin-bottom:16px;font-size:12px;color:#E74C3C;display:none;text-align:left;}
+  .auth-success{background:#2ECC7118;border:1px solid #2ECC7144;border-radius:8px;padding:16px;margin-bottom:16px;font-size:13px;color:#2ECC71;display:none;text-align:left;line-height:1.6;}
 
   /* ── App ── */
-  #app{display:flex;flex-direction:column;height:100vh;display:none;}
+  #app{display:none;flex-direction:column;height:100vh;}
   #header{display:flex;align-items:center;justify-content:space-between;padding:0 20px;height:56px;border-bottom:1px solid var(--border);flex-shrink:0;}
   #tabs{display:flex;gap:2px;padding:0 20px;border-bottom:1px solid var(--border);flex-shrink:0;}
   #main{flex:1;overflow-y:auto;}
@@ -123,17 +124,16 @@
   <div class="auth-box">
     <div class="auth-icon">🏠</div>
     <div class="auth-title">Survey Remedy CRM</div>
-    <div class="auth-sub">Sign in to access your CRM</div>
+    <div class="auth-sub" id="auth-sub">Enter your email and we'll send you a magic link to sign in — no password needed.</div>
     <div id="auth-error" class="auth-error"></div>
-    <div style="margin-bottom:12px">
-      <label class="field-label">Email</label>
-      <input class="inp" id="login-email" type="email" placeholder="you@surveyremedy.co.uk" onkeydown="if(event.key==='Enter')signIn()"/>
+    <div id="auth-success" class="auth-success"></div>
+    <div id="auth-form">
+      <div style="margin-bottom:16px;text-align:left">
+        <label class="field-label">Email</label>
+        <input class="inp" id="login-email" type="email" placeholder="you@surveyremedy.co.uk" onkeydown="if(event.key==='Enter')sendMagicLink()"/>
+      </div>
+      <button class="btn btn-primary" onclick="sendMagicLink()" id="login-btn" style="width:100%;padding:13px;font-size:14px">Send Magic Link ✉️</button>
     </div>
-    <div style="margin-bottom:20px">
-      <label class="field-label">Password</label>
-      <input class="inp" id="login-password" type="password" placeholder="••••••••" onkeydown="if(event.key==='Enter')signIn()"/>
-    </div>
-    <button class="btn btn-primary" onclick="signIn()" id="login-btn" style="width:100%;padding:13px;font-size:14px">Sign In</button>
   </div>
 </div>
 
@@ -163,10 +163,8 @@
   </div>
 
   <div id="main">
-    <!-- BOARD -->
     <div id="view-kanban"><div id="kanban-wrap"><div id="kanban"><div class="loading-state"><div class="spinner"></div><p>Loading…</p></div></div></div></div>
 
-    <!-- CHAT -->
     <div id="view-chat" style="display:none;height:calc(100vh - 116px)">
       <div id="chat-wrap">
         <div id="chat-messages"></div>
@@ -184,7 +182,6 @@
       </div>
     </div>
 
-    <!-- EMAIL -->
     <div id="view-email" style="display:none">
       <div id="email-wrap">
         <div class="field-row">
@@ -207,7 +204,6 @@
       </div>
     </div>
 
-    <!-- PRICING -->
     <div id="view-pricing" style="display:none">
       <div id="pricing-wrap">
         <p style="font-size:11px;color:var(--dim);margin-bottom:16px">Client-facing prices. Reference when quoting.</p>
@@ -224,7 +220,6 @@
       </div>
     </div>
 
-    <!-- PROVIDERS -->
     <div id="view-providers" style="display:none">
       <div id="providers-wrap"><div id="provider-grid" class="provider-grid"></div></div>
     </div>
@@ -291,7 +286,6 @@
 <script>
 const SB_URL = "https://clhtrqhndszhfzmsfoth.supabase.co";
 const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNsaHRycWhuZHN6aGZ6bXNmb3RoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA5OTI5MDUsImV4cCI6MjA3NjU2ODkwNX0.XLOUh0jMg2t3ZflvxBZ3DvDLEvJRe_J-QLTf7TSSnyQ";
-
 const { createClient } = supabase;
 const db = createClient(SB_URL, SB_KEY);
 
@@ -313,31 +307,50 @@ const PRICING = [
   {s:"Gas Safety Check",p:["£80","£80","£80","£100","£100","POA"],d:"1–2 hrs"},
 ];
 
-let clients=[], interactions=[], providers=[], chatHistory=[], currentClient=null;
+let clients=[], interactions=[], providers=[], chatHistory=[];
 
 // ── Auth ──────────────────────────────────────────────────────────────────────
-async function signIn() {
-  const email    = document.getElementById("login-email").value.trim();
-  const password = document.getElementById("login-password").value;
-  const errEl    = document.getElementById("auth-error");
-  const btn      = document.getElementById("login-btn");
-  if (!email || !password) { showAuthError("Please enter your email and password."); return; }
-  btn.textContent = "Signing in…"; btn.disabled = true;
-  const { error } = await db.auth.signInWithPassword({ email, password });
-  if (error) { showAuthError(error.message); btn.textContent="Sign In"; btn.disabled=false; return; }
-  showApp();
+async function sendMagicLink() {
+  const email = document.getElementById("login-email").value.trim();
+  if (!email) { showAuthError("Please enter your email address."); return; }
+  const btn = document.getElementById("login-btn");
+  btn.textContent = "Sending…"; btn.disabled = true;
+  document.getElementById("auth-error").style.display = "none";
+
+  const { error } = await db.auth.signInWithOtp({
+    email,
+    options: { shouldCreateUser: false } // only existing users can sign in
+  });
+
+  if (error) {
+    showAuthError(error.message);
+    btn.textContent = "Send Magic Link ✉️"; btn.disabled = false;
+    return;
+  }
+
+  // Show success state
+  document.getElementById("auth-form").style.display = "none";
+  document.getElementById("auth-sub").style.display = "none";
+  const s = document.getElementById("auth-success");
+  s.style.display = "block";
+  s.innerHTML = `✉️ Magic link sent to <strong>${email}</strong><br><br>Check your inbox and click the link to sign in. You can close this tab.`;
+}
+
+function showAuthError(msg) {
+  const el = document.getElementById("auth-error");
+  el.textContent = "⚠️ " + msg; el.style.display = "block";
 }
 
 async function signOut() {
   await db.auth.signOut();
   document.getElementById("app").style.display = "none";
   document.getElementById("auth-screen").style.display = "flex";
-  document.getElementById("login-password").value = "";
-}
-
-function showAuthError(msg) {
-  const el = document.getElementById("auth-error");
-  el.textContent = msg; el.style.display = "block";
+  document.getElementById("auth-form").style.display = "block";
+  document.getElementById("auth-sub").style.display = "block";
+  document.getElementById("auth-success").style.display = "none";
+  document.getElementById("login-btn").textContent = "Send Magic Link ✉️";
+  document.getElementById("login-btn").disabled = false;
+  document.getElementById("login-email").value = "";
 }
 
 function showApp() {
@@ -346,8 +359,8 @@ function showApp() {
   loadAll();
 }
 
-// Check if already logged in on page load
-db.auth.getSession().then(({ data: { session } }) => {
+// Handle magic link redirect & session on load
+db.auth.onAuthStateChange((event, session) => {
   if (session) showApp();
 });
 
@@ -367,7 +380,7 @@ async function loadAll() {
     setSyncStatus("synced");
   } catch(e) {
     setSyncStatus("error");
-    notify("Error: "+e.message, "error");
+    notify("Error: " + e.message, "error");
   }
 }
 
@@ -416,19 +429,19 @@ async function submitNewClient() {
   try {
     await dbInsert("clients", {
       id:newId, name,
-      company:    document.getElementById("f-company").value || null,
-      client_type:document.getElementById("f-type").value,
-      service:    document.getElementById("f-service").value,
-      email:      document.getElementById("f-email").value || null,
-      phone:      document.getElementById("f-phone").value || null,
-      address:    document.getElementById("f-address").value || null,
-      beds:       document.getElementById("f-beds").value || null,
-      status:     document.getElementById("f-status").value,
-      source:     document.getElementById("f-source").value,
-      follow_up:  document.getElementById("f-followup").value || null,
+      company:     document.getElementById("f-company").value || null,
+      client_type: document.getElementById("f-type").value,
+      service:     document.getElementById("f-service").value,
+      email:       document.getElementById("f-email").value || null,
+      phone:       document.getElementById("f-phone").value || null,
+      address:     document.getElementById("f-address").value || null,
+      beds:        document.getElementById("f-beds").value || null,
+      status:      document.getElementById("f-status").value,
+      source:      document.getElementById("f-source").value,
+      follow_up:   document.getElementById("f-followup").value || null,
       invoice_refs:document.getElementById("f-invoice").value || null,
-      drive_link: document.getElementById("f-drive").value || null,
-      date_added: new Date().toISOString().split("T")[0],
+      drive_link:  document.getElementById("f-drive").value || null,
+      date_added:  new Date().toISOString().split("T")[0],
     });
     notify(`✓ ${name} saved`);
     closeModal("add-client-modal");
@@ -439,8 +452,8 @@ async function submitNewClient() {
 
 // ── Client modal ──────────────────────────────────────────────────────────────
 function openClient(id) {
-  currentClient = clients.find(c => c.id === id); if (!currentClient) return;
-  const c = currentClient, s = STATUSES.find(s => s.id === c.status);
+  const c = clients.find(c => c.id === id); if (!c) return;
+  const s = STATUSES.find(s => s.id === c.status);
   document.getElementById("modal-name").textContent = c.name;
   document.getElementById("modal-pills").innerHTML = [
     c.client_type ? `<span class="pill" style="background:#6B7EFF18;color:var(--blue)">${c.client_type}</span>` : "",
@@ -452,7 +465,7 @@ function openClient(id) {
     ["Follow Up",c.follow_up||"—"],["Invoice Refs",c.invoice_refs||"—"],["Source",c.source],["Date Added",c.date_added]
   ].filter(([,v])=>v).map(([l,v])=>`<div><div class="detail-label">${l}</div><div class="detail-value">${v}</div></div>`).join("");
   const dw = document.getElementById("modal-drive");
-  if (c.drive_link) { dw.style.display="block"; document.getElementById("modal-drive-link").href=c.drive_link; } else dw.style.display="none";
+  if (c.drive_link){dw.style.display="block";document.getElementById("modal-drive-link").href=c.drive_link;}else dw.style.display="none";
   const ci = interactions.filter(i => i.client_id === c.id);
   const iw = document.getElementById("modal-interactions");
   if (ci.length) {
@@ -469,12 +482,12 @@ function openClient(id) {
   document.getElementById("modal-status-btn").onclick = () => { showView("chat",document.querySelectorAll(".tab")[1]); setHint(`Move ${c.name} to `); closeModal("client-modal"); };
   document.getElementById("client-modal").style.display = "flex";
 }
-function closeModal(id) { document.getElementById(id).style.display = "none"; }
+function closeModal(id){document.getElementById(id).style.display="none";}
 
 // ── Providers ─────────────────────────────────────────────────────────────────
 function renderProviders() {
   const g = document.getElementById("provider-grid");
-  if (!providers.length) { g.innerHTML=`<div class="empty-state">No providers yet.</div>`; return; }
+  if (!providers.length){g.innerHTML=`<div class="empty-state">No providers yet.</div>`;return;}
   g.innerHTML = providers.map(p =>
     `<div class="card card-static">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
@@ -488,17 +501,16 @@ function renderProviders() {
         <div style="font-size:11px"><span style="color:var(--dim)">Rate </span><span style="color:var(--green);font-weight:700">${p.rate||"—"}</span></div>
         <div style="font-size:11px"><span style="color:var(--dim)">Rating </span><span style="color:var(--orange);font-weight:700">${"★".repeat(Math.min(parseInt(p.rating)||0,5))}</span></div>
       </div>
-      ${p.notes?`<div style="font-size:10px;color:#444;margin-top:6px;line-height:1.5">${p.notes}</div>`:""}
-    </div>`).join("");
+      ${p.notes?`<div style="font-size:10px;color:#444;margin-top:6px;line-height:1.5">${p.notes}</div>`:""}</div>`).join("");
 }
 
 // ── Email ─────────────────────────────────────────────────────────────────────
-function populateEmailClients() {
-  const sel=document.getElementById("email-client"), cur=sel.value;
+function populateEmailClients(){
+  const sel=document.getElementById("email-client"),cur=sel.value;
   sel.innerHTML=`<option value="">— Generic —</option>`+clients.map(c=>`<option value="${c.id}">${c.name}</option>`).join("");
   sel.value=cur; updateEmail();
 }
-function updateEmail() {
+function updateEmail(){
   const tpl=document.getElementById("email-template").value;
   const c=clients.find(cl=>cl.id===document.getElementById("email-client").value);
   const n=c?.name?.split(" ")[0]||"[Name]";
@@ -517,19 +529,19 @@ function openEmail(){window.location.href=`mailto:?subject=${encodeURIComponent(
 // ── Chat ──────────────────────────────────────────────────────────────────────
 function addBubble(role,text){
   const wrap=document.getElementById("chat-messages");
-  const div=document.createElement("div"); div.style.cssText=`display:flex;justify-content:${role==="user"?"flex-end":"flex-start"}`;
-  const b=document.createElement("div"); b.className=`bubble bubble-${role}`; b.textContent=text;
-  div.appendChild(b); wrap.appendChild(div); wrap.scrollTop=wrap.scrollHeight;
+  const div=document.createElement("div");div.style.cssText=`display:flex;justify-content:${role==="user"?"flex-end":"flex-start"}`;
+  const b=document.createElement("div");b.className=`bubble bubble-${role}`;b.textContent=text;
+  div.appendChild(b);wrap.appendChild(div);wrap.scrollTop=wrap.scrollHeight;
 }
-function addTyping(){const wrap=document.getElementById("chat-messages");const div=document.createElement("div");div.id="typing-indicator";div.style.cssText="display:flex;justify-content:flex-start";div.innerHTML=`<div class="bubble bubble-assistant"><div class="typing"><span></span><span></span><span></span></div></div>`;wrap.appendChild(div);wrap.scrollTop=wrap.scrollHeight;}
+function addTyping(){const w=document.getElementById("chat-messages");const d=document.createElement("div");d.id="typing-indicator";d.style.cssText="display:flex;justify-content:flex-start";d.innerHTML=`<div class="bubble bubble-assistant"><div class="typing"><span></span><span></span><span></span></div></div>`;w.appendChild(d);w.scrollTop=w.scrollHeight;}
 function removeTyping(){document.getElementById("typing-indicator")?.remove();}
 function setHint(t){document.getElementById("chat-input").value=t+": ";document.getElementById("chat-input").focus();}
 
 async function sendChat(){
   const input=document.getElementById("chat-input");
-  const msg=input.value.trim(); if(!msg)return;
-  input.value=""; addBubble("user",msg); chatHistory.push({role:"user",content:msg});
-  document.getElementById("chat-send-btn").disabled=true; addTyping();
+  const msg=input.value.trim();if(!msg)return;
+  input.value="";addBubble("user",msg);chatHistory.push({role:"user",content:msg});
+  document.getElementById("chat-send-btn").disabled=true;addTyping();
   const clientList=clients.slice(0,30).map(c=>`${c.id}: ${c.name} (${c.client_type||"?"}, ${c.status}, ${c.service||"?"})`).join("\n");
   try{
     const res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({
@@ -542,7 +554,7 @@ async function sendChat(){
     const am=full.match(/<ACTION>([\s\S]*?)<\/ACTION>/);
     const display=full.replace(/<ACTION>[\s\S]*?<\/ACTION>/g,"").trim();
     if(am){try{await applyAction(JSON.parse(am[1]));}catch(e){console.error(e);}}
-    removeTyping(); addBubble("assistant",display); chatHistory.push({role:"assistant",content:display});
+    removeTyping();addBubble("assistant",display);chatHistory.push({role:"assistant",content:display});
   }catch(e){removeTyping();addBubble("assistant","Something went wrong. Please try again.");}
   document.getElementById("chat-send-btn").disabled=false;
 }
@@ -571,15 +583,14 @@ async function applyAction(action){
       await dbInsert("jobs",{id:newId,client_id:action.client_id||null,client_name:action.client_name||"",address:action.address||null,beds:action.beds||null,service:action.service||"",job_date:action.job_date||null,status:action.job_status||"Quote Sent",notes:action.notes||null});
       notify(`✓ Job ${newId} added`);
     }
-    await loadAll(); setSyncStatus("synced");
+    await loadAll();setSyncStatus("synced");
   }catch(e){setSyncStatus("error");notify("Save error: "+e.message,"error");console.error(e);}
 }
 
 // ── UI helpers ────────────────────────────────────────────────────────────────
 function showView(id,tabEl){
   ["kanban","chat","email","pricing","providers"].forEach(v=>{
-    const el=document.getElementById("view-"+v);
-    el.style.display=v===id?(v==="chat"?"flex":"block"):"none";
+    document.getElementById("view-"+v).style.display=v===id?(v==="chat"?"flex":"block"):"none";
   });
   document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
   if(tabEl)tabEl.classList.add("active");
@@ -593,16 +604,15 @@ function setSyncStatus(s){
 }
 function notify(msg,type="success"){
   const el=document.getElementById("notif");
-  el.textContent=msg; el.style.background=type==="error"?"#E74C3C":"#2ECC71";
-  el.style.color="white"; el.style.display="block";
+  el.textContent=msg;el.style.background=type==="error"?"#E74C3C":"#2ECC71";
+  el.style.color="white";el.style.display="block";
   setTimeout(()=>{el.style.display="none";},3500);
 }
 
-// ── Init ──────────────────────────────────────────────────────────────────────
 document.addEventListener("DOMContentLoaded",()=>{
   const tbody=document.getElementById("pricing-body");
   PRICING.forEach((row,i)=>{
-    const tr=document.createElement("tr"); tr.style.background=i%2===0?"var(--bg)":"#0D1018";
+    const tr=document.createElement("tr");tr.style.background=i%2===0?"var(--bg)":"#0D1018";
     tr.innerHTML=`<td style="font-size:12px;font-weight:600;color:var(--muted);padding:10px 12px">${row.s}</td>`+
       row.p.map(v=>`<td style="text-align:center;padding:10px 12px"><span class="${v==="POA"?"price-poa":"price-val"}">${v}</span></td>`).join("")+
       `<td style="text-align:center;font-size:11px;color:var(--dim);font-style:italic;padding:10px 12px">${row.d}</td>`;
