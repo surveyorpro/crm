@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Survey Remedy CRM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet"/>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<style>
+  :root {
+    --navy:   #0F1520;
+    --bg:     #0A0D14;
+    --card:   #13161F;
+    --border: #1E2230;
+    --blue:   #6B7EFF;
+    --green:  #4CAF96;
+    --orange: #F5A623;
+    --purple: #9B6BFF;
+    --emerald:#2ECC71;
+    --grey:   #95A5A6;
+    --text:   #E8EAF0;
+    --muted:  #C8CAD5;
+    --dim:    #555;
+    --dimmer: #333;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;}
+  ::-webkit-scrollbar{width:4px;height:4px;}
+  ::-webkit-scrollbar-thumb{background:#2A2D3A;border-radius:2px;}
+
+  /* ── Layout ── */
+  #app{display:flex;flex-direction:column;height:100vh;}
+  #header{display:flex;align-items:center;justify-content:space-between;padding:0 20px;height:56px;border-bottom:1px solid var(--border);flex-shrink:0;}
+  #tabs{display:flex;gap:2px;padding:0 20px;border-bottom:1px solid var(--border);flex-shrink:0;}
+  #main{flex:1;overflow-y:auto;}
+
+  /* ── Header ── */
+  .logo{display:flex;align-items:center;gap:10px;}
+  .logo-icon{width:30px;height:30px;background:linear-gradient(135deg,var(--blue),var(--green));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;}
+  .logo-title{font-family:'DM Serif Display',serif;font-size:17px;}
+  .header-right{display:flex;align-items:center;gap:10px;}
+  .sync-dot{display:inline-block;width:7px;height:7px;border-radius:50%;transition:background .3s;}
+  .sync-label{font-size:11px;color:var(--dim);}
+
+  /* ── Tabs ── */
+  .tab{background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;padding:10px 16px;font-family:inherit;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;transition:all .2s;color:var(--dim);}
+  .tab.active{color:var(--blue);border-bottom-color:var(--blue);}
+  .tab:hover:not(.active){color:#888;}
+
+  /* ── Buttons ── */
+  .btn{border:none;border-radius:8px;cursor:pointer;font-family:inherit;font-weight:600;font-size:12px;padding:9px 16px;transition:all .18s;}
+  .btn-primary{background:linear-gradient(135deg,var(--blue),#5568DD);color:white;}
+  .btn-primary:hover{opacity:.9;transform:translateY(-1px);}
+  .btn-primary:disabled{background:#1E2230;color:#444;cursor:not-allowed;transform:none;}
+  .btn-secondary{background:var(--border);color:var(--muted);}
+  .btn-secondary:hover{background:#252838;}
+  .btn-ghost{background:none;color:var(--dim);border:1px solid var(--border);}
+  .btn-ghost:hover{border-color:var(--blue);color:var(--blue);}
+
+  /* ── Inputs ── */
+  .inp{background:var(--card);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:inherit;font-size:13px;padding:10px 13px;width:100%;outline:none;transition:border-color .2s;}
+  .inp:focus{border-color:var(--blue);}
+  select.inp{appearance:none;cursor:pointer;}
+  textarea.inp{resize:vertical;min-height:220px;line-height:1.6;}
+
+  /* ── Cards ── */
+  .card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:13px;cursor:pointer;transition:all .18s;margin-bottom:8px;}
+  .card:hover{border-color:#6B7EFF44;transform:translateY(-1px);box-shadow:0 6px 24px #6B7EFF08;}
+  .card-static{cursor:default;}
+
+  /* ── Pills ── */
+  .pill{display:inline-block;padding:2px 9px;border-radius:20px;font-size:10px;font-weight:700;}
+
+  /* ── Kanban ── */
+  #kanban-wrap{padding:20px;overflow-x:auto;}
+  #kanban{display:flex;gap:14px;min-width:max-content;}
+  .col{min-width:210px;flex:0 0 210px;}
+  .col-header{display:flex;align-items:center;gap:7px;margin-bottom:10px;}
+  .col-title{font-size:10px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.07em;}
+  .col-count{margin-left:auto;background:#1A1D2A;border-radius:20px;padding:1px 7px;font-size:10px;color:#444;}
+  .col-add{border:1px dashed var(--border);border-radius:8px;padding:8px;text-align:center;font-size:11px;color:var(--dimmer);cursor:pointer;transition:all .2s;}
+  .col-add:hover{border-color:var(--blue);color:var(--blue);}
+
+  /* ── Chat ── */
+  #chat-wrap{display:flex;flex-direction:column;height:100%;max-width:700px;margin:0 auto;padding:20px;gap:14px;}
+  #chat-messages{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:10px;}
+  .bubble{padding:11px 15px;border-radius:12px;max-width:86%;font-size:13px;line-height:1.65;white-space:pre-wrap;}
+  .bubble-user{background:var(--blue);color:white;border-radius:12px 12px 2px 12px;margin-left:auto;}
+  .bubble-assistant{background:var(--card);color:var(--muted);border:1px solid var(--border);border-radius:12px 12px 12px 2px;}
+  #chat-input-row{display:flex;gap:8px;}
+  #chat-hints{display:flex;gap:6px;flex-wrap:wrap;}
+  .hint-btn{background:none;color:var(--dim);border:1px solid var(--border);border-radius:6px;cursor:pointer;font-family:inherit;font-size:10px;padding:5px 10px;transition:all .2s;}
+  .hint-btn:hover{border-color:var(--blue);color:var(--blue);}
+  .typing span{display:inline-block;width:5px;height:5px;border-radius:50%;background:#555;margin:0 2px;animation:blink 1.2s infinite;}
+  .typing span:nth-child(2){animation-delay:.2s;}
+  .typing span:nth-child(3){animation-delay:.4s;}
+
+  /* ── Email ── */
+  #email-wrap{padding:24px;max-width:720px;margin:0 auto;}
+  .field-label{font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;display:block;}
+  .field-row{display:flex;gap:14px;margin-bottom:20px;flex-wrap:wrap;}
+  .field-group{flex:1;min-width:180px;}
+
+  /* ── Pricing ── */
+  #pricing-wrap{padding:20px;overflow-x:auto;}
+  .price-table{border-collapse:collapse;width:100%;min-width:680px;}
+  .price-table th{padding:10px 12px;font-size:10px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid var(--border);}
+  .price-table td{padding:10px 12px;border-bottom:1px solid #0D1018;}
+  .price-val{color:var(--green);font-weight:700;font-size:13px;}
+  .price-poa{color:var(--dim);font-style:italic;font-size:11px;}
+
+  /* ── Providers ── */
+  #providers-wrap{padding:20px;}
+  .provider-grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));}
+
+  /* ── Modal ── */
+  .modal-bg{position:fixed;inset:0;background:#000000BB;z-index:100;display:flex;align-items:center;justify-content:center;padding:20px;}
+  .modal{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:26px;width:100%;max-width:540px;max-height:82vh;overflow-y:auto;}
+  .modal-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px;}
+  .modal-title{font-family:'DM Serif Display',serif;font-size:20px;margin-bottom:6px;}
+  .modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;}
+  .detail-label{font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px;}
+  .detail-value{font-size:12px;color:var(--muted);}
+  .modal-actions{display:flex;gap:8px;border-top:1px solid var(--border);padding-top:14px;margin-top:4px;}
+
+  /* ── Auth screen ── */
+  #auth-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:40px;}
+  .auth-box{text-align:center;max-width:400px;width:100%;}
+  .auth-icon{width:64px;height:64px;background:linear-gradient(135deg,var(--blue),var(--green));border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 24px;}
+  .auth-title{font-family:'DM Serif Display',serif;font-size:30px;margin-bottom:8px;}
+  .auth-subtitle{color:var(--dim);font-size:13px;margin-bottom:32px;line-height:1.7;}
+  .auth-error{background:#E74C3C18;border:1px solid #E74C3C44;border-radius:8px;padding:12px 16px;margin-bottom:20px;font-size:12px;color:#E74C3C;text-align:left;line-height:1.6;}
+  .auth-btn{background:linear-gradient(135deg,var(--blue),var(--green));border:none;border-radius:12px;color:white;cursor:pointer;font-family:inherit;font-size:15px;font-weight:600;padding:16px 40px;width:100%;transition:all .2s;}
+  .auth-btn:hover{opacity:.9;transform:translateY(-1px);}
+  .auth-btn:disabled{background:#1E2230;color:#444;cursor:not-allowed;transform:none;}
+  .auth-note{color:var(--dimmer);font-size:11px;margin-top:12px;}
+
+  /* ── Notification ── */
+  #notif{position:fixed;bottom:20px;right:20px;padding:10px 18px;border-radius:8px;font-size:13px;font-weight:600;z-index:999;display:none;animation:slideUp .25s ease;}
+  @keyframes slideUp{from{transform:translateY(16px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+
+  /* ── Spinner ── */
+  .spinner{width:18px;height:18px;border:2px solid var(--border);border-top-color:var(--blue);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto;}
+  .loading-state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px;gap:14px;}
+  .loading-state p{color:var(--dim);font-size:12px;}
+
+  /* ── Interactions ── */
+  .int-row{display:flex;gap:10px;margin-bottom:8px;font-size:12px;padding-bottom:8px;border-bottom:1px solid var(--border);}
+  .int-date{color:#444;white-space:nowrap;min-width:80px;}
+  .int-type{color:var(--blue);min-width:70px;}
+  .int-note{color:var(--muted);}
+
+  /* ── Misc ── */
+  .section-hint{font-size:11px;color:var(--dim);margin-bottom:16px;}
+  .empty-state{color:#444;font-size:13px;text-align:center;padding:40px;}
+  a{color:var(--blue);text-decoration:none;}
+  a:hover{text-decoration:underline;}
+
+  @keyframes blink{0%,60%,100%{opacity:.3;transform:translateY(0);}30%{opacity:1;transform:translateY(-4px);}}
+  @keyframes spin{to{transform:rotate(360deg);}}
+</style>
+</head>
+<body>
+
+<div id="notif"></div>
+
+<!-- ── AUTH SCREEN ── -->
+<div id="auth-screen">
+  <div class="auth-box">
+    <div class="auth-icon">🏠</div>
+    <div class="auth-title">Survey Remedy CRM</div>
+    <div class="auth-subtitle">
+      Connect to your Google Sheet to manage clients,<br/>
+      log interactions, and track jobs — all in one place.
+    </div>
+    <div id="auth-error" class="auth-error" style="display:none"></div>
+    <button id="auth-btn" class="auth-btn" disabled onclick="signIn()">Loading…</button>
+    <div class="auth-note">Signs in with your surveyremedy.co.uk Google account</div>
+  </div>
+</div>
+
+<!-- ── MAIN APP ── -->
+<div id="app" style="display:none">
+
+  <div id="header">
+    <div class="logo">
+      <div class="logo-icon">🏠</div>
+      <span class="logo-title">Survey Remedy CRM</span>
+      <span style="color:var(--border);margin:0 4px">|</span>
+      <span id="client-count" style="color:var(--dim);font-size:11px">0 clients</span>
+    </div>
+    <div class="header-right">
+      <span class="sync-dot" id="sync-dot" style="background:var(--dim)"></span>
+      <span class="sync-label" id="sync-label">—</span>
+      <button class="btn btn-ghost" onclick="loadAll()" style="font-size:11px">↻ Refresh</button>
+      <button class="btn btn-ghost" onclick="signOut()" style="font-size:11px">Sign out</button>
+    </div>
+  </div>
+
+  <div id="tabs">
+    <button class="tab active" onclick="showView('kanban',this)">📋 Board</button>
+    <button class="tab" onclick="showView('chat',this)">💬 Chat</button>
+    <button class="tab" onclick="showView('email',this)">✉️ Emails</button>
+    <button class="tab" onclick="showView('pricing',this)">£ Pricing</button>
+    <button class="tab" onclick="showView('providers',this)">🔧 Providers</button>
+  </div>
+
+  <div id="main">
+
+    <!-- KANBAN -->
+    <div id="view-kanban">
+      <div id="kanban-wrap">
+        <div id="kanban"></div>
+      </div>
+    </div>
+
+    <!-- CHAT -->
+    <div id="view-chat" style="display:none;height:calc(100vh - 116px)">
+      <div id="chat-wrap">
+        <div id="chat-messages"></div>
+        <div id="chat-input-row">
+          <input class="inp" id="chat-input" placeholder="e.g. New client: Sarah Lee, landlord, 3-bed EICR in Peckham…" onkeydown="if(event.key==='Enter')sendChat()"/>
+          <button class="btn btn-primary" onclick="sendChat()" id="chat-send-btn">Send</button>
+        </div>
+        <div id="chat-hints">
+          <button class="hint-btn" onclick="setHint('New client')">New client</button>
+          <button class="hint-btn" onclick="setHint('Log interaction')">Log interaction</button>
+          <button class="hint-btn" onclick="setHint('Update status')">Update status</button>
+          <button class="hint-btn" onclick="setHint('Set follow-up')">Set follow-up</button>
+          <button class="hint-btn" onclick="setHint('Add job')">Add job</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- EMAIL -->
+    <div id="view-email" style="display:none">
+      <div id="email-wrap">
+        <div class="field-row">
+          <div class="field-group">
+            <label class="field-label">Template</label>
+            <select class="inp" id="email-template" onchange="updateEmail()">
+              <option value="confirmation">✓ Confirmation</option>
+              <option value="quote">£ Quote</option>
+              <option value="reminder">⏰ Reminder</option>
+              <option value="followup">↗ Follow Up</option>
+            </select>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Client</label>
+            <select class="inp" id="email-client" onchange="updateEmail()">
+              <option value="">— Generic —</option>
+            </select>
+          </div>
+        </div>
+        <div style="margin-bottom:14px">
+          <label class="field-label">Subject</label>
+          <input class="inp" id="email-subject"/>
+        </div>
+        <div style="margin-bottom:18px">
+          <label class="field-label">Body</label>
+          <textarea class="inp" id="email-body"></textarea>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-primary" onclick="copyEmail()">Copy</button>
+          <button class="btn btn-secondary" onclick="openEmail()">Open in Mail</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRICING -->
+    <div id="view-pricing" style="display:none">
+      <div id="pricing-wrap">
+        <p class="section-hint">Client-facing prices. Reference when quoting or drafting emails.</p>
+        <table class="price-table">
+          <thead>
+            <tr>
+              <th style="text-align:left">Service</th>
+              <th style="text-align:center">Studio/1B</th>
+              <th style="text-align:center">2 Bed</th>
+              <th style="text-align:center">3 Bed</th>
+              <th style="text-align:center">4 Bed</th>
+              <th style="text-align:center">5 Bed</th>
+              <th style="text-align:center">6 Bed+</th>
+              <th style="text-align:center">Duration</th>
+            </tr>
+          </thead>
+          <tbody id="pricing-body"></tbody>
+        </table>
+        <p style="margin-top:14px;font-size:11px;color:var(--dim);font-style:italic">All prices indicative. POA = Price on Application. Subject to site visit confirmation.</p>
+      </div>
+    </div>
+
+    <!-- PROVIDERS -->
+    <div id="view-providers" style="display:none">
+      <div id="providers-wrap">
+        <div id="provider-grid" class="provider-grid"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- CLIENT MODAL -->
+<div id="client-modal" class="modal-bg" style="display:none" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="modal-name"></div>
+        <div id="modal-pills" style="display:flex;gap:6px;flex-wrap:wrap"></div>
+      </div>
+      <button class="btn btn-ghost" onclick="closeModal()" style="font-size:16px;padding:3px 10px">×</button>
+    </div>
+    <div class="modal-grid" id="modal-details"></div>
+    <div id="modal-drive" style="display:none;margin-bottom:14px">
+      <div class="detail-label">Google Drive</div>
+      <a id="modal-drive-link" href="#" target="_blank" rel="noreferrer">Open folder ↗</a>
+    </div>
+    <div id="modal-interactions" style="display:none;margin-bottom:14px">
+      <div class="detail-label" style="margin-bottom:8px">Interaction Log</div>
+      <div id="modal-int-list"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-primary" id="modal-email-btn" style="font-size:11px">✉ Email</button>
+      <button class="btn btn-secondary" id="modal-note-btn" style="font-size:11px">+ Log note</button>
+      <button class="btn btn-secondary" id="modal-status-btn" style="font-size:11px">✎ Status</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── Config ───────────────────────────────────────────────────────────────────
+const CLIENT_ID = "44722487546-h2o6od4693g12570hm3j33pc8492778f.apps.googleusercontent.com";
+const SHEET_ID  = "1pqZINfl5fMELo1uWAk08rTu6lNYgNLZIHG_F4esryY8";
+const SCOPES    = "https://www.googleapis.com/auth/spreadsheets";
+
+const SERVICES  = ["Damp Survey","Mould Survey","Structural Engineer","Roof Inspection","EPC","EICR (Landlord)","EICR (Homeowner)","Gas Safety Check"];
+
+const STATUSES  = [
+  { id:"Inbox",       color:"#6B7EFF", bg:"#6B7EFF18" },
+  { id:"Waiting",     color:"#F5A623", bg:"#F5A62318" },
+  { id:"Active",      color:"#4CAF96", bg:"#4CAF9618" },
+  { id:"Ready",       color:"#9B6BFF", bg:"#9B6BFF18" },
+  { id:"Done",        color:"#2ECC71", bg:"#2ECC7118" },
+  { id:"Cold Lead",   color:"#95A5A6", bg:"#95A5A618" },
+  { id:"Past Client", color:"#BDC3C7", bg:"#BDC3C718" },
+];
+
+const PRICING = [
+  { s:"Damp Survey",        p:["£150","£175","£200","£225","£250","POA"], d:"2–3 hrs" },
+  { s:"Mould Survey",       p:["£150","£175","£200","£225","£250","POA"], d:"2–3 hrs" },
+  { s:"Structural Engineer",p:["POA","POA","POA","POA","POA","POA"],      d:"Half day+" },
+  { s:"Roof Inspection",    p:["£150","£150","£175","£200","£225","POA"], d:"1–2 hrs" },
+  { s:"EPC",                p:["£80","£90","£100","£110","£120","POA"],   d:"1–2 hrs" },
+  { s:"EICR (Landlord)",    p:["£150","£175","£200","£250","£300","POA"], d:"3–5 hrs" },
+  { s:"EICR (Homeowner)",   p:["£200","£225","£275","£325","£375","POA"], d:"4–6 hrs" },
+  { s:"Gas Safety Check",   p:["£80","£80","£80","£100","£100","POA"],    d:"1–2 hrs" },
+];
+
+// ── State ─────────────────────────────────────────────────────────────────────
+let token        = null;
+let tokenClient  = null;
+let clients      = [];
+let interactions = [];
+let providers    = [];
+let chatHistory  = [];
+let currentClient= null;
+
+// ── Auth ──────────────────────────────────────────────────────────────────────
+function waitForGSI(callback, tries=0) {
+  if (window.google?.accounts?.oauth2) { callback(); return; }
+  if (tries > 40) { showAuthError("Google sign-in failed to load. Please refresh the page."); return; }
+  setTimeout(() => waitForGSI(callback, tries+1), 200);
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  // Init chat
+  addBubble("assistant", "Hi! I'm your Survey Remedy CRM assistant.\n\nTry:\n• \"New client: John Smith, landlord, john@email.com, 07700 123456, 3-bed EICR in Brixton\"\n• \"Log call with John Smith – happy with quote\"\n• \"Move John Smith to Active\"\n• \"Follow up with John Smith on 20th Feb\"\n• \"New job INV-010, Damp Survey for John Smith, 25th Jan\"");
+
+  // Init pricing table
+  const tbody = document.getElementById("pricing-body");
+  PRICING.forEach((row, i) => {
+    const tr = document.createElement("tr");
+    tr.style.background = i%2===0 ? "var(--bg)" : "#0D1018";
+    tr.innerHTML = `<td style="font-size:12px;font-weight:600;color:var(--muted);padding:10px 12px">${row.s}</td>` +
+      row.p.map(v => `<td style="text-align:center;padding:10px 12px"><span class="${v==="POA"?"price-poa":"price-val"}">${v}</span></td>`).join("") +
+      `<td style="text-align:center;font-size:11px;color:var(--dim);font-style:italic;padding:10px 12px">${row.d}</td>`;
+    tbody.appendChild(tr);
+  });
+
+  waitForGSI(initAuth);
+});
+
+function initAuth() {
+  try {
+    tokenClient = google.accounts.oauth2.initTokenClient({
+      client_id: CLIENT_ID,
+      scope: SCOPES,
+      callback: (resp) => {
+        if (resp.error) { showAuthError(`Auth error: ${resp.error} — ${resp.error_description||""}`); return; }
+        if (resp.access_token) {
+          token = resp.access_token;
+          document.getElementById("auth-screen").style.display = "none";
+          document.getElementById("app").style.display = "flex";
+          loadAll();
+        }
+      },
+    });
+    const btn = document.getElementById("auth-btn");
+    btn.disabled = false;
+    btn.textContent = "Connect to Google Sheets";
+  } catch(e) {
+    showAuthError("Could not initialise Google auth: " + e.message);
+  }
+}
+
+function signIn() {
+  if (!tokenClient) { showAuthError("Auth not ready — please wait a moment."); return; }
+  document.getElementById("auth-error").style.display = "none";
+  tokenClient.requestAccessToken({ prompt: "consent" });
+}
+
+function signOut() {
+  if (token) google.accounts.oauth2.revoke(token);
+  token = null; clients = []; interactions = []; providers = [];
+  document.getElementById("app").style.display = "none";
+  document.getElementById("auth-screen").style.display = "flex";
+}
+
+function showAuthError(msg) {
+  const el = document.getElementById("auth-error");
+  el.style.display = "block";
+  el.textContent = "⚠️ " + msg;
+}
+
+// ── Sheets API ────────────────────────────────────────────────────────────────
+async function sheetsGet(range) {
+  const res = await fetch(
+    `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(range)}`,
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
+  if (!res.ok) throw new Error(`Sheets API ${res.status}`);
+  return (await res.json()).values || [];
+}
+
+async function sheetsAppend(range, values) {
+  const res = await fetch(
+    `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(range)}:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`,
+    { method:"POST", headers:{ Authorization:`Bearer ${token}`, "Content-Type":"application/json" }, body:JSON.stringify({ values }) }
+  );
+  if (!res.ok) throw new Error(`Append ${res.status}`);
+}
+
+async function sheetsUpdate(range, value) {
+  const res = await fetch(
+    `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(range)}?valueInputOption=USER_ENTERED`,
+    { method:"PUT", headers:{ Authorization:`Bearer ${token}`, "Content-Type":"application/json" }, body:JSON.stringify({ values:[[value]] }) }
+  );
+  if (!res.ok) throw new Error(`Update ${res.status}`);
+}
+
+// ── Load data ─────────────────────────────────────────────────────────────────
+async function loadAll() {
+  setSyncStatus("syncing");
+  try {
+    const [cr, ir, pr] = await Promise.all([
+      sheetsGet("Clients!A2:P300"),
+      sheetsGet("Interactions Log!A2:I300"),
+      sheetsGet("Providers!A2:M100"),
+    ]);
+    clients      = parseClients(cr);
+    interactions = parseInteractions(ir);
+    providers    = parseProviders(pr);
+    document.getElementById("client-count").textContent = clients.length + " clients";
+    renderKanban();
+    renderProviders();
+    populateEmailClients();
+    setSyncStatus("synced");
+  } catch(e) {
+    setSyncStatus("error");
+    notify("Error loading sheet: " + e.message, "error");
+  }
+}
+
+function parseClients(rows) {
+  return rows.filter(r=>r[0]&&r[1]).map(r=>({
+    id:r[0]||"", name:r[1]||"", company:r[2]||"", type:r[3]||"",
+    email:r[4]||"", phone:r[5]||"", address:r[6]||"", beds:r[7]||"",
+    service:r[8]||"", status:r[9]||"Inbox", source:r[10]||"",
+    dateAdded:r[11]||"", lastContact:r[12]||"", followUp:r[13]||"",
+    invoiceRefs:r[14]||"", driveLink:r[15]||"",
+  }));
+}
+
+function parseInteractions(rows) {
+  return rows.filter(r=>r[0]).map(r=>({
+    id:r[0]||"", clientId:r[1]||"", clientName:r[2]||"",
+    date:r[3]||"", type:r[4]||"", notes:r[5]||"",
+    followUpDate:r[6]||"", done:r[7]||"", invoice:r[8]||"",
+  }));
+}
+
+function parseProviders(rows) {
+  return rows.filter(r=>r[0]).map(r=>({
+    id:r[0]||"", name:r[1]||"", contact:r[2]||"", phone:r[3]||"",
+    email:r[4]||"", speciality:r[5]||"", area:r[6]||"", rate:r[7]||"",
+    availability:r[8]||"", rating:r[9]||"", jobs:r[10]||"",
+    insured:r[11]||"", notes:r[12]||"",
+  }));
+}
+
+// ── Kanban ────────────────────────────────────────────────────────────────────
+function renderKanban() {
+  const wrap = document.getElementById("kanban");
+  wrap.innerHTML = "";
+  STATUSES.forEach(s => {
+    const col = document.createElement("div");
+    col.className = "col";
+    const colClients = clients.filter(c=>c.status===s.id);
+    col.innerHTML = `
+      <div class="col-header">
+        <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${s.color}"></span>
+        <span class="col-title">${s.id}</span>
+        <span class="col-count">${colClients.length}</span>
+      </div>
+      ${colClients.map(c=>`
+        <div class="card" onclick="openClient('${c.id}')">
+          <div style="font-weight:600;font-size:12px;margin-bottom:4px">${c.name}</div>
+          <div style="display:flex;gap:4px;margin-bottom:5px;flex-wrap:wrap">
+            ${c.type?`<span class="pill" style="background:${s.bg};color:${s.color}">${c.type}</span>`:""}
+            ${c.beds?`<span class="pill" style="background:#1A1D2A;color:var(--dim)">${c.beds}bed</span>`:""}
+          </div>
+          <div style="font-size:11px;color:var(--blue);margin-bottom:3px">${c.service}</div>
+          ${c.address?`<div style="font-size:10px;color:#444">📍 ${c.address.substring(0,38)}${c.address.length>38?"…":""}</div>`:""}
+          ${c.followUp?`<div style="font-size:10px;color:var(--orange);margin-top:5px">⏰ ${c.followUp}</div>`:""}
+        </div>
+      `).join("")}
+      <div class="col-add" onclick="setHintAndSwitch('New client in ${s.id}')">+ Add</div>
+    `;
+    wrap.appendChild(col);
+  });
+}
+
+// ── Providers ─────────────────────────────────────────────────────────────────
+function renderProviders() {
+  const grid = document.getElementById("provider-grid");
+  if (!providers.length) {
+    grid.innerHTML = `<div class="empty-state">No providers found in your Google Sheet.</div>`;
+    return;
+  }
+  grid.innerHTML = providers.map(p=>`
+    <div class="card card-static">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+        <div style="font-weight:700;font-size:13px">${p.name}</div>
+        <span class="pill" style="background:${p.availability==="Available"?"#2ECC7120":"#E74C3C20"};color:${p.availability==="Available"?"#2ECC71":"#E74C3C"}">${p.availability||"—"}</span>
+      </div>
+      <div style="font-size:11px;color:var(--blue);margin-bottom:6px">${p.speciality}</div>
+      <div style="font-size:11px;color:var(--dim);margin-bottom:3px">📞 ${p.phone} · ${p.contact}</div>
+      <div style="font-size:11px;color:var(--dim);margin-bottom:3px">📍 ${p.area}</div>
+      <div style="display:flex;gap:14px;margin-top:8px;padding-top:8px;border-top:1px solid var(--border)">
+        <div style="font-size:11px"><span style="color:var(--dim)">Rate </span><span style="color:var(--green);font-weight:700">${p.rate||"—"}</span></div>
+        <div style="font-size:11px"><span style="color:var(--dim)">Rating </span><span style="color:var(--orange);font-weight:700">${"★".repeat(Math.min(parseInt(p.rating)||0,5))}</span></div>
+        <div style="font-size:11px"><span style="color:var(--dim)">Jobs </span><span style="font-weight:700">${p.jobs||"0"}</span></div>
+      </div>
+      ${p.notes?`<div style="font-size:10px;color:#444;margin-top:6px;line-height:1.5">${p.notes}</div>`:""}
+    </div>
+  `).join("");
+}
+
+// ── Client modal ──────────────────────────────────────────────────────────────
+function openClient(id) {
+  currentClient = clients.find(c=>c.id===id);
+  if (!currentClient) return;
+  const c = currentClient;
+  const s = STATUSES.find(s=>s.id===c.status);
+
+  document.getElementById("modal-name").textContent = c.name;
+  document.getElementById("modal-pills").innerHTML = [
+    c.type?`<span class="pill" style="background:#6B7EFF18;color:var(--blue)">${c.type}</span>`:"",
+    c.status?`<span class="pill" style="background:${s?.bg||"#1E2230"};color:${s?.color||"#888"}">${c.status}</span>`:"",
+    c.beds?`<span class="pill" style="background:#1A1D2A;color:var(--dim)">${c.beds} bed</span>`:"",
+  ].join("");
+
+  const details = [["Service",c.service],["Email",c.email],["Phone",c.phone],["Address",c.address],["Follow Up",c.followUp||"—"],["Invoice Refs",c.invoiceRefs||"—"],["Source",c.source],["Date Added",c.dateAdded]];
+  document.getElementById("modal-details").innerHTML = details.filter(([,v])=>v).map(([l,v])=>`
+    <div><div class="detail-label">${l}</div><div class="detail-value">${v}</div></div>
+  `).join("");
+
+  const driveWrap = document.getElementById("modal-drive");
+  if (c.driveLink) {
+    driveWrap.style.display = "block";
+    document.getElementById("modal-drive-link").href = c.driveLink;
+  } else driveWrap.style.display = "none";
+
+  const clientInts = interactions.filter(i=>i.clientId===c.id);
+  const intWrap = document.getElementById("modal-interactions");
+  if (clientInts.length) {
+    intWrap.style.display = "block";
+    document.getElementById("modal-int-list").innerHTML = clientInts.map(i=>`
+      <div class="int-row">
+        <span class="int-date">${i.date}</span>
+        <span class="int-type">${i.type}</span>
+        <span class="int-note">${i.notes}</span>
+      </div>
+    `).join("");
+  } else intWrap.style.display = "none";
+
+  document.getElementById("modal-email-btn").onclick = () => { showView("email", document.querySelectorAll(".tab")[2]); document.getElementById("email-client").value = c.id; updateEmail(); closeModal(); };
+  document.getElementById("modal-note-btn").onclick  = () => { showView("chat", document.querySelectorAll(".tab")[1]); setHint(`Log interaction with ${c.name}`); closeModal(); };
+  document.getElementById("modal-status-btn").onclick= () => { showView("chat", document.querySelectorAll(".tab")[1]); setHint(`Move ${c.name} to `); closeModal(); };
+
+  document.getElementById("client-modal").style.display = "flex";
+}
+
+function closeModal() { document.getElementById("client-modal").style.display = "none"; }
+
+// ── Email ─────────────────────────────────────────────────────────────────────
+function populateEmailClients() {
+  const sel = document.getElementById("email-client");
+  const cur = sel.value;
+  sel.innerHTML = `<option value="">— Generic —</option>` + clients.map(c=>`<option value="${c.id}">${c.name}</option>`).join("");
+  sel.value = cur;
+  updateEmail();
+}
+
+function updateEmail() {
+  const tpl = document.getElementById("email-template").value;
+  const cid = document.getElementById("email-client").value;
+  const c   = clients.find(cl=>cl.id===cid);
+  const n   = c?.name?.split(" ")[0] || "[Name]";
+  const templates = {
+    confirmation: { subject:`Confirmation – ${c?.name||"[Client]"}`, body:`Hi ${n},\n\nThank you for getting in touch. I can confirm I've received your enquiry regarding ${c?.service||"[service]"} at ${c?.address||"[property address]"}.\n\nI'll be in touch shortly to discuss next steps.\n\nWarm regards,\n[Your Name]` },
+    quote:        { subject:`Your Quote – ${c?.name||"[Client]"}`,    body:`Hi ${n},\n\nPlease find below our proposed fee for ${c?.service||"[service]"} at ${c?.address||"[address]"}:\n\n• Service: ${c?.service||"[Service]"}\n• Property: ${c?.beds||"[X]"} bedroom\n• Fee: £[Amount]\n• Includes: [What's covered]\n• Estimated date: [Date]\n\nPlease reply to confirm and I'll get this booked in.\n\nWarm regards,\n[Your Name]` },
+    reminder:     { subject:`Appointment Reminder – ${c?.name||"[Client]"}`, body:`Hi ${n},\n\nJust a friendly reminder about your upcoming appointment:\n\n📅 Date: [Date]\n🕐 Time: [Time]\n📍 Address: ${c?.address||"[Address]"}\n🔧 Service: ${c?.service||"[Service]"}\n\nPlease ensure access is available. Let me know if you need to reschedule.\n\nWarm regards,\n[Your Name]` },
+    followup:     { subject:`Following Up – ${c?.name||"[Client]"}`,  body:`Hi ${n},\n\nI hope you're well. I wanted to follow up on our recent conversation about ${c?.service||"[service]"} at ${c?.address||"[property]"}.\n\nAre you still looking to proceed? Happy to answer any questions.\n\nWarm regards,\n[Your Name]` },
+  };
+  const t = templates[tpl];
+  document.getElementById("email-subject").value = t.subject;
+  document.getElementById("email-body").value    = t.body;
+}
+
+function copyEmail() {
+  const text = `Subject: ${document.getElementById("email-subject").value}\n\n${document.getElementById("email-body").value}`;
+  navigator.clipboard.writeText(text).then(()=>notify("✓ Copied to clipboard"));
+}
+
+function openEmail() {
+  const s = encodeURIComponent(document.getElementById("email-subject").value);
+  const b = encodeURIComponent(document.getElementById("email-body").value);
+  window.location.href = `mailto:?subject=${s}&body=${b}`;
+}
+
+// ── Chat ──────────────────────────────────────────────────────────────────────
+function addBubble(role, text) {
+  const wrap = document.getElementById("chat-messages");
+  const div  = document.createElement("div");
+  div.style.cssText = `display:flex;justify-content:${role==="user"?"flex-end":"flex-start"}`;
+  const bubble = document.createElement("div");
+  bubble.className = `bubble bubble-${role}`;
+  bubble.textContent = text;
+  div.appendChild(bubble);
+  wrap.appendChild(div);
+  wrap.scrollTop = wrap.scrollHeight;
+}
+
+function addTyping() {
+  const wrap = document.getElementById("chat-messages");
+  const div  = document.createElement("div");
+  div.id = "typing-indicator";
+  div.style.cssText = "display:flex;justify-content:flex-start";
+  div.innerHTML = `<div class="bubble bubble-assistant"><div class="typing"><span></span><span></span><span></span></div></div>`;
+  wrap.appendChild(div);
+  wrap.scrollTop = wrap.scrollHeight;
+}
+
+function removeTyping() {
+  const el = document.getElementById("typing-indicator");
+  if (el) el.remove();
+}
+
+function setHint(text) {
+  document.getElementById("chat-input").value = text + ": ";
+  document.getElementById("chat-input").focus();
+}
+
+function setHintAndSwitch(text) {
+  showView("chat", document.querySelectorAll(".tab")[1]);
+  setHint(text);
+}
+
+async function sendChat() {
+  const input = document.getElementById("chat-input");
+  const msg   = input.value.trim();
+  if (!msg) return;
+  input.value = "";
+  addBubble("user", msg);
+  chatHistory.push({ role:"user", content:msg });
+  document.getElementById("chat-send-btn").disabled = true;
+  addTyping();
+
+  const clientList = clients.slice(0,30).map(c=>`${c.id}: ${c.name} (${c.type||"?"}, ${c.status}, ${c.service||"?"})`).join("\n");
+
+  try {
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+      method:"POST",
+      headers:{ "Content-Type":"application/json" },
+      body: JSON.stringify({
+        model:"claude-sonnet-4-20250514",
+        max_tokens:1000,
+        system:`You are a CRM assistant for a UK property care business called Survey Remedy.
+Services: ${SERVICES.join(", ")}.
+Current clients:\n${clientList}
+
+When user wants to add or update data, respond briefly AND include a JSON action in <ACTION> tags.
+
+Actions:
+- Add client:      <ACTION>{"type":"add_client","name":"...","company":"...","clientType":"Homeowner|Landlord|Estate Agent|Letting Agent|Tenant","email":"...","phone":"...","address":"...","beds":"...","service":"...","status":"Inbox","followUp":"..."}</ACTION>
+- Log interaction: <ACTION>{"type":"log_interaction","clientName":"...","interactionType":"Call|Email|WhatsApp|Site Visit|Quote Sent|Invoice Sent|Job Completed","notes":"...","followUpDate":"...","invoice":"..."}</ACTION>
+- Update status:   <ACTION>{"type":"update_status","clientName":"...","status":"Inbox|Waiting|Active|Ready|Done|Cold Lead|Past Client"}</ACTION>
+- Set follow-up:   <ACTION>{"type":"set_followup","clientName":"...","date":"..."}</ACTION>
+- Add job:         <ACTION>{"type":"add_job","invoice":"...","clientName":"...","service":"...","address":"...","beds":"...","jobDate":"...","status":"Quote Sent|Confirmed|Scheduled|Completed","notes":"..."}</ACTION>
+
+Be concise. Make sensible assumptions for missing info and mention them.`,
+        messages: chatHistory.slice(-10),
+      }),
+    });
+    const data = await res.json();
+    const full = data.content?.map(b=>b.text||"").join("") || "Sorry, try again.";
+    const actionMatch = full.match(/<ACTION>([\s\S]*?)<\/ACTION>/);
+    const display = full.replace(/<ACTION>[\s\S]*?<\/ACTION>/g,"").trim();
+
+    if (actionMatch) {
+      try { await applyAction(JSON.parse(actionMatch[1])); } catch(e) { console.error(e); }
+    }
+    removeTyping();
+    addBubble("assistant", display);
+    chatHistory.push({ role:"assistant", content:display });
+  } catch(e) {
+    removeTyping();
+    addBubble("assistant", "Something went wrong. Please try again.");
+  }
+  document.getElementById("chat-send-btn").disabled = false;
+}
+
+// ── CRM Actions → Sheet ───────────────────────────────────────────────────────
+async function applyAction(action) {
+  setSyncStatus("syncing");
+  try {
+    const today = new Date().toISOString().split("T")[0];
+
+    if (action.type === "add_client") {
+      const newId = `C${String(clients.length+1).padStart(3,"0")}`;
+      await sheetsAppend("Clients!A:P", [[
+        newId, action.name||"", action.company||"", action.clientType||"",
+        action.email||"", action.phone||"", action.address||"", action.beds||"",
+        action.service||"", action.status||"Inbox", action.source||"",
+        today, "", action.followUp||"", "", ""
+      ]]);
+      notify(`✓ ${action.name} saved to Google Sheet`);
+
+    } else if (action.type === "log_interaction") {
+      const newId = `L${String(interactions.length+1).padStart(3,"0")}`;
+      const client = clients.find(c=>c.name.toLowerCase().includes((action.clientName||"").toLowerCase()));
+      await sheetsAppend("Interactions Log!A:I", [[
+        newId, client?.id||"", action.clientName||"", today,
+        action.interactionType||"Note", action.notes||"",
+        action.followUpDate||"", "No", action.invoice||""
+      ]]);
+      notify(`✓ Interaction logged for ${action.clientName}`);
+
+    } else if (action.type === "update_status") {
+      const rows = await sheetsGet("Clients!A:B");
+      const idx  = rows.findIndex(r=>r[1]?.toLowerCase().includes((action.clientName||"").toLowerCase()));
+      if (idx>=0) { await sheetsUpdate(`Clients!J${idx+1}`, action.status); notify(`✓ ${action.clientName} → ${action.status}`); }
+      else notify(`Client not found: ${action.clientName}`, "error");
+
+    } else if (action.type === "set_followup") {
+      const rows = await sheetsGet("Clients!A:B");
+      const idx  = rows.findIndex(r=>r[1]?.toLowerCase().includes((action.clientName||"").toLowerCase()));
+      if (idx>=0) { await sheetsUpdate(`Clients!N${idx+1}`, action.date); notify(`✓ Follow-up set for ${action.clientName}`); }
+
+    } else if (action.type === "add_job") {
+      const client = clients.find(c=>c.name.toLowerCase().includes((action.clientName||"").toLowerCase()));
+      await sheetsAppend("Jobs & Quotes!A:N", [[
+        action.invoice||"", client?.id||"", action.clientName||"",
+        action.address||client?.address||"", action.beds||client?.beds||"",
+        action.service||"", action.jobDate||"", "","","","",
+        action.status||"Quote Sent","No", action.notes||""
+      ]]);
+      notify(`✓ Job ${action.invoice} added`);
+    }
+
+    await loadAll();
+    setSyncStatus("synced");
+  } catch(e) {
+    setSyncStatus("error");
+    notify("Save error: " + e.message, "error");
+  }
+}
+
+// ── UI helpers ────────────────────────────────────────────────────────────────
+function showView(id, tabEl) {
+  ["kanban","chat","email","pricing","providers"].forEach(v => {
+    document.getElementById("view-"+v).style.display = v===id ? "block" : "none";
+  });
+  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+  if (tabEl) tabEl.classList.add("active");
+  if (id==="chat") document.getElementById("view-chat").style.display = "flex";
+}
+
+function setSyncStatus(status) {
+  const dot   = document.getElementById("sync-dot");
+  const label = document.getElementById("sync-label");
+  const colors = { idle:"var(--dim)", syncing:"var(--orange)", synced:"var(--emerald)", error:"#E74C3C" };
+  const labels = { idle:"—", syncing:"Saving…", synced:"Synced ✓", error:"Error" };
+  dot.style.background   = colors[status];
+  dot.style.boxShadow    = status==="syncing" ? `0 0 6px ${colors[status]}` : "none";
+  label.textContent      = labels[status];
+}
+
+function notify(msg, type="success") {
+  const el = document.getElementById("notif");
+  el.textContent = msg;
+  el.style.background = type==="error" ? "#E74C3C" : "#2ECC71";
+  el.style.color = "white";
+  el.style.display = "block";
+  setTimeout(()=>{ el.style.display="none"; }, 3500);
+}
+
+// Init email template
+document.addEventListener("DOMContentLoaded", updateEmail);
+</script>
+</body>
+</html>
