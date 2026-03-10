@@ -139,6 +139,7 @@
     <button class="tab" onclick="showView('email',this)">✉️ Emails</button>
     <button class="tab" onclick="showView('pricing',this)">£ Pricing</button>
     <button class="tab" onclick="showView('providers',this)">🔧 Providers</button>
+    <button class="tab" onclick="showView('jobs',this)">📁 Jobs</button>
   </div>
   <div id="main">
     <div id="view-kanban"><div id="kanban-wrap"><div id="kanban"><div class="loading-state"><div class="spinner"></div><p>Loading…</p></div></div></div></div>
@@ -195,7 +196,22 @@
       </div>
     </div>
     <div id="view-providers" style="display:none">
-      <div id="providers-wrap"><div id="provider-grid" class="provider-grid"></div></div>
+      <div id="providers-wrap">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+          <p style="font-size:11px;color:var(--dim)">Subcontractors & partners.</p>
+          <button class="btn btn-primary" onclick="openAddProvider()" style="font-size:11px">+ Add Provider</button>
+        </div>
+        <div id="provider-grid" class="provider-grid"></div>
+      </div>
+    </div>
+    <div id="view-jobs" style="display:none">
+      <div style="padding:20px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+          <p style="font-size:11px;color:var(--dim)">All jobs &amp; quotes.</p>
+          <button class="btn btn-primary" onclick="openAddJob('','','','','')" style="font-size:11px">+ Add Job</button>
+        </div>
+        <div id="jobs-list"></div>
+      </div>
     </div>
   </div>
 </div>
@@ -323,15 +339,47 @@
   </div>
 </div>
 
+<!-- PROVIDER MODAL -->
+<div id="provider-modal" class="modal-bg" style="display:none" onclick="if(event.target===this)closeModal('provider-modal')">
+  <div class="form-modal">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+      <div id="prov-modal-title" style="font-family:'DM Serif Display',serif;font-size:20px">New Provider</div>
+      <button class="btn btn-ghost" onclick="closeModal('provider-modal')" style="font-size:16px;padding:3px 10px">×</button>
+    </div>
+    <input type="hidden" id="prov-id"/>
+    <div class="form-grid">
+      <div><label class="form-label">Name *</label><input class="inp" id="prov-name" placeholder="e.g. Dave Ellis"/></div>
+      <div><label class="form-label">Contact / Company</label><input class="inp" id="prov-contact" placeholder="e.g. Ellis Electrical"/></div>
+      <div><label class="form-label">Phone</label><input class="inp" id="prov-phone"/></div>
+      <div><label class="form-label">Speciality</label><input class="inp" id="prov-speciality" placeholder="e.g. EICR, Gas Safety"/></div>
+      <div><label class="form-label">Area / Region</label><input class="inp" id="prov-area" placeholder="e.g. South London"/></div>
+      <div><label class="form-label">Day Rate / Fee</label><input class="inp" id="prov-rate" placeholder="e.g. £200/day"/></div>
+      <div><label class="form-label">Availability</label>
+        <select class="inp" id="prov-availability"><option>Available</option><option>Busy</option><option>Unavailable</option></select>
+      </div>
+      <div><label class="form-label">Rating (1–5)</label>
+        <select class="inp" id="prov-rating"><option>5</option><option>4</option><option>3</option><option>2</option><option>1</option></select>
+      </div>
+      <div class="full"><label class="form-label">Notes</label><textarea class="inp" id="prov-notes" style="min-height:80px" placeholder="Reliability, quality, anything useful…"></textarea></div>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-primary" onclick="submitProvider()">Save Provider</button>
+      <button class="btn btn-ghost" onclick="closeModal('provider-modal')">Cancel</button>
+      <button id="prov-delete-btn" class="btn" style="display:none;margin-left:auto;background:#E74C3C18;color:#E74C3C;border:1px solid #E74C3C44" onclick="deleteProvider()">Delete</button>
+    </div>
+  </div>
+</div>
+
 <!-- ADD JOB MODAL -->
 <div id="add-job-modal" class="modal-bg" style="display:none" onclick="if(event.target===this)closeModal('add-job-modal')">
   <div class="form-modal">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
-      <div style="font-family:'DM Serif Display',serif;font-size:20px">Add Job</div>
+      <div id="aj-modal-title" style="font-family:'DM Serif Display',serif;font-size:20px">Add Job</div>
       <button class="btn btn-ghost" onclick="closeModal('add-job-modal')" style="font-size:16px;padding:3px 10px">×</button>
     </div>
     <div id="aj-client-name" style="font-size:12px;color:var(--blue);margin-bottom:16px;font-weight:600"></div>
     <input type="hidden" id="aj-client-id"/>
+    <input type="hidden" id="aj-editing-id"/>
     <div class="form-grid">
       <div><label class="form-label">Invoice / Job Ref</label><input class="inp" id="aj-invoice" placeholder="INV-001"/></div>
       <div><label class="form-label">Service</label>
@@ -348,6 +396,7 @@
     <div style="display:flex;gap:8px">
       <button class="btn btn-primary" onclick="submitAddJob()">Save Job</button>
       <button class="btn btn-ghost" onclick="closeModal('add-job-modal')">Cancel</button>
+      <button id="aj-delete-btn" class="btn" style="display:none;margin-left:auto;background:#E74C3C18;color:#E74C3C;border:1px solid #E74C3C44" onclick="deleteJob()">Delete</button>
     </div>
   </div>
 </div>
@@ -360,7 +409,7 @@ const db=createClient(SB_URL,SB_KEY);
 const SERVICES=["Damp Survey","Mould Survey","Structural Engineer","Roof Inspection","EPC","EICR (Landlord)","EICR (Homeowner)","Gas Safety Check"];
 const STATUSES=[{id:"Inbox",color:"#6B7EFF",bg:"#6B7EFF18"},{id:"Waiting",color:"#F5A623",bg:"#F5A62318"},{id:"Active",color:"#4CAF96",bg:"#4CAF9618"},{id:"Ready",color:"#9B6BFF",bg:"#9B6BFF18"},{id:"Done",color:"#2ECC71",bg:"#2ECC7118"},{id:"Cold Lead",color:"#95A5A6",bg:"#95A5A618"},{id:"Past Client",color:"#BDC3C7",bg:"#BDC3C718"}];
 const PRICING=[{s:"Damp Survey",p:["£150","£175","£200","£225","£250","POA"],d:"2–3 hrs"},{s:"Mould Survey",p:["£150","£175","£200","£225","£250","POA"],d:"2–3 hrs"},{s:"Structural Engineer",p:["POA","POA","POA","POA","POA","POA"],d:"Half day+"},{s:"Roof Inspection",p:["£150","£150","£175","£200","£225","POA"],d:"1–2 hrs"},{s:"EPC",p:["£80","£90","£100","£110","£120","POA"],d:"1–2 hrs"},{s:"EICR (Landlord)",p:["£150","£175","£200","£250","£300","POA"],d:"3–5 hrs"},{s:"EICR (Homeowner)",p:["£200","£225","£275","£325","£375","POA"],d:"4–6 hrs"},{s:"Gas Safety Check",p:["£80","£80","£80","£100","£100","POA"],d:"1–2 hrs"}];
-let clients=[],interactions=[],providers=[],chatHistory=[];
+let clients=[],interactions=[],providers=[],jobs=[],chatHistory=[];
 
 // ── Auth ──────────────────────────────────────────────────────────────────────
 async function sendMagicLink(){
@@ -400,15 +449,16 @@ db.auth.onAuthStateChange((event,session)=>{if(session)showApp();});
 async function loadAll(){
   setSyncStatus("syncing");
   try{
-    const[c,i,p]=await Promise.all([
+    const[c,i,p,j]=await Promise.all([
       db.from("clients").select("*").order("created_at"),
       db.from("interactions").select("*").order("created_at"),
       db.from("providers").select("*").order("created_at"),
+      db.from("jobs").select("*").order("created_at"),
     ]);
     if(c.error)throw c.error;
-    clients=c.data||[];interactions=i.data||[];providers=p.data||[];
+    clients=c.data||[];interactions=i.data||[];providers=p.data||[];jobs=j.data||[];
     document.getElementById("client-count").textContent=`${clients.length} clients`;
-    renderKanban();renderProviders();populateEmailClients();
+    renderKanban();renderProviders();renderJobs();populateEmailClients();
     setSyncStatus("synced");
   }catch(e){setSyncStatus("error");notify("Error: "+e.message,"error");}
 }
@@ -497,8 +547,51 @@ function closeModal(id){document.getElementById(id).style.display="none";}
 // ── Providers ─────────────────────────────────────────────────────────────────
 function renderProviders(){
   const g=document.getElementById("provider-grid");
-  if(!providers.length){g.innerHTML=`<div class="empty-state">No providers yet.</div>`;return;}
-  g.innerHTML=providers.map(p=>`<div class="card card-static"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px"><div style="font-weight:700;font-size:13px">${p.name}</div><span class="pill" style="background:${p.availability==="Available"?"#2ECC7120":"#E74C3C20"};color:${p.availability==="Available"?"#2ECC71":"#E74C3C"}">${p.availability||"—"}</span></div><div style="font-size:11px;color:var(--blue);margin-bottom:6px">${p.speciality||""}</div><div style="font-size:11px;color:var(--dim);margin-bottom:3px">📞 ${p.phone||""} · ${p.contact||""}</div><div style="font-size:11px;color:var(--dim)">📍 ${p.area||""}</div><div style="display:flex;gap:14px;margin-top:8px;padding-top:8px;border-top:1px solid var(--border)"><div style="font-size:11px"><span style="color:var(--dim)">Rate </span><span style="color:var(--green);font-weight:700">${p.rate||"—"}</span></div><div style="font-size:11px"><span style="color:var(--dim)">Rating </span><span style="color:var(--orange);font-weight:700">${"★".repeat(Math.min(parseInt(p.rating)||0,5))}</span></div></div>${p.notes?`<div style="font-size:10px;color:#444;margin-top:6px;line-height:1.5">${p.notes}</div>`:""}</div>`).join("");
+  if(!providers.length){g.innerHTML=`<div class="empty-state">No providers yet. Click + Add Provider.</div>`;return;}
+  g.innerHTML=providers.map(p=>`<div class="card" onclick="openEditProvider('${p.id}')">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+      <div style="font-weight:700;font-size:13px">${p.name}</div>
+      <span class="pill" style="background:${p.availability==="Available"?"#2ECC7120":"#E74C3C20"};color:${p.availability==="Available"?"#2ECC71":"#E74C3C"}">${p.availability||"—"}</span>
+    </div>
+    <div style="font-size:11px;color:var(--blue);margin-bottom:6px">${p.speciality||""}</div>
+    <div style="font-size:11px;color:var(--dim);margin-bottom:3px">📞 ${p.phone||""} · ${p.contact||""}</div>
+    <div style="font-size:11px;color:var(--dim)">📍 ${p.area||""}</div>
+    <div style="display:flex;gap:14px;margin-top:8px;padding-top:8px;border-top:1px solid var(--border)">
+      <div style="font-size:11px"><span style="color:var(--dim)">Rate </span><span style="color:var(--green);font-weight:700">${p.rate||"—"}</span></div>
+      <div style="font-size:11px"><span style="color:var(--dim)">Rating </span><span style="color:var(--orange);font-weight:700">${"★".repeat(Math.min(parseInt(p.rating)||0,5))}</span></div>
+    </div>
+    ${p.notes?`<div style="font-size:10px;color:#444;margin-top:6px;line-height:1.5">${p.notes}</div>`:""}
+    <div style="font-size:10px;color:var(--blue);margin-top:8px;text-align:right">Click to edit ›</div>
+  </div>`).join("");
+}
+
+// ── Jobs ──────────────────────────────────────────────────────────────────────
+const JOB_STATUS_COLORS={"Quote Sent":"#F5A623","Confirmed":"#6B7EFF","Scheduled":"#4CAF96","Completed":"#2ECC71"};
+function renderJobs(){
+  const g=document.getElementById("jobs-list");
+  if(!g)return;
+  if(!jobs.length){g.innerHTML=`<div class="empty-state">No jobs yet. Click + Add Job.</div>`;return;}
+  // Sort newest first
+  const sorted=[...jobs].sort((a,b)=>(b.job_date||"").localeCompare(a.job_date||""));
+  g.innerHTML=sorted.map(j=>{
+    const col=JOB_STATUS_COLORS[j.status]||"#888";
+    return `<div class="card" onclick="openEditJob('${j.id}')" style="display:flex;gap:14px;align-items:flex-start">
+      <div style="flex:1">
+        <div style="display:flex;gap:8px;align-items:center;margin-bottom:4px">
+          <span style="font-weight:700;font-size:13px">${j.client_name||"—"}</span>
+          <span class="pill" style="background:${col}20;color:${col}">${j.status||"—"}</span>
+          ${j.id?`<span style="font-size:10px;color:var(--dim)">${j.id}</span>`:""}
+        </div>
+        <div style="font-size:11px;color:var(--blue);margin-bottom:3px">${j.service||""}</div>
+        ${j.address?`<div style="font-size:10px;color:#444">📍 ${j.address}</div>`:""}
+        ${j.notes?`<div style="font-size:10px;color:#555;margin-top:4px">${j.notes}</div>`:""}
+      </div>
+      <div style="text-align:right;white-space:nowrap">
+        ${j.job_date?`<div style="font-size:11px;color:var(--muted)">${j.job_date}</div>`:""}
+        ${j.beds?`<div style="font-size:10px;color:var(--dim)">${j.beds} bed</div>`:""}
+      </div>
+    </div>`;
+  }).join("");
 }
 
 // ── Email ─────────────────────────────────────────────────────────────────────
@@ -558,7 +651,7 @@ async function applyAction(action){
 }
 
 // ── UI ────────────────────────────────────────────────────────────────────────
-function showView(id,tabEl){["kanban","chat","email","pricing","providers"].forEach(v=>{document.getElementById("view-"+v).style.display=v===id?(v==="chat"?"flex":"block"):"none";});document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));if(tabEl)tabEl.classList.add("active");}
+function showView(id,tabEl){["kanban","chat","email","pricing","providers","jobs"].forEach(v=>{document.getElementById("view-"+v).style.display=v===id?(v==="chat"?"flex":"block"):"none";});document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));if(tabEl)tabEl.classList.add("active");}
 function setSyncStatus(s){const c={idle:"var(--dim)",syncing:"var(--orange)",synced:"var(--emerald)",error:"var(--red)"};const l={idle:"—",syncing:"Saving…",synced:"Synced ✓",error:"Error"};document.getElementById("sync-dot").style.background=c[s];document.getElementById("sync-dot").style.boxShadow=s==="syncing"?`0 0 6px ${c[s]}`:"none";document.getElementById("sync-label").textContent=l[s];}
 function notify(msg,type="success"){const el=document.getElementById("notif");el.textContent=msg;el.style.background=type==="error"?"#E74C3C":"#2ECC71";el.style.color="white";el.style.display="block";setTimeout(()=>{el.style.display="none";},3500);}
 
@@ -626,16 +719,90 @@ function openAddJob(clientId,clientName,address,beds,service){
   document.getElementById("aj-date").value="";
   document.getElementById("aj-status").value="Quote Sent";
   document.getElementById("aj-notes").value="";
+  document.getElementById("aj-editing-id").value="";
+  document.getElementById("aj-modal-title").textContent="Add Job";
+  document.getElementById("aj-delete-btn").style.display="none";
   document.getElementById("add-job-modal").style.display="flex";
 }
 async function submitAddJob(){
+  const editingId=document.getElementById("aj-editing-id").value;
   const clientId=document.getElementById("aj-client-id").value;
   const clientName=clients.find(c=>c.id===clientId)?.name||document.getElementById("aj-client-name").textContent.replace("For: ","");
   const invoice=document.getElementById("aj-invoice").value.trim()||"J"+String(Date.now()).slice(-6);
+  const data={client_id:clientId||null,client_name:clientName,address:document.getElementById("aj-address").value||null,beds:document.getElementById("aj-beds").value||null,service:document.getElementById("aj-service").value,job_date:document.getElementById("aj-date").value||null,status:document.getElementById("aj-status").value,notes:document.getElementById("aj-notes").value||null};
   try{
-    await dbInsert("jobs",{id:invoice,client_id:clientId||null,client_name:clientName,address:document.getElementById("aj-address").value||null,beds:document.getElementById("aj-beds").value||null,service:document.getElementById("aj-service").value,job_date:document.getElementById("aj-date").value||null,status:document.getElementById("aj-status").value,notes:document.getElementById("aj-notes").value||null});
-    notify(`✓ Job ${invoice} added`);closeModal("add-job-modal");await loadAll();
+    if(editingId){await dbUpdate("jobs",editingId,data);notify(`✓ Job updated`);}
+    else{await dbInsert("jobs",{id:invoice,...data});notify(`✓ Job ${invoice} added`);}
+    closeModal("add-job-modal");await loadAll();
   }catch(e){notify("Error: "+e.message,"error");}
+}
+
+// ── Provider CRUD ─────────────────────────────────────────────────────────────
+function openAddProvider(){
+  document.getElementById("prov-id").value="";
+  document.getElementById("prov-modal-title").textContent="New Provider";
+  ["prov-name","prov-contact","prov-phone","prov-speciality","prov-area","prov-rate","prov-notes"].forEach(id=>document.getElementById(id).value="");
+  document.getElementById("prov-availability").value="Available";
+  document.getElementById("prov-rating").value="5";
+  document.getElementById("prov-delete-btn").style.display="none";
+  document.getElementById("provider-modal").style.display="flex";
+}
+function openEditProvider(id){
+  const p=providers.find(p=>p.id===id);if(!p)return;
+  document.getElementById("prov-id").value=p.id;
+  document.getElementById("prov-modal-title").textContent="Edit Provider";
+  document.getElementById("prov-name").value=p.name||"";
+  document.getElementById("prov-contact").value=p.contact||"";
+  document.getElementById("prov-phone").value=p.phone||"";
+  document.getElementById("prov-speciality").value=p.speciality||"";
+  document.getElementById("prov-area").value=p.area||"";
+  document.getElementById("prov-rate").value=p.rate||"";
+  document.getElementById("prov-notes").value=p.notes||"";
+  document.getElementById("prov-availability").value=p.availability||"Available";
+  document.getElementById("prov-rating").value=p.rating||"5";
+  document.getElementById("prov-delete-btn").style.display="inline-block";
+  document.getElementById("provider-modal").style.display="flex";
+}
+async function submitProvider(){
+  const name=document.getElementById("prov-name").value.trim();
+  if(!name){notify("Name is required","error");return;}
+  const id=document.getElementById("prov-id").value;
+  const data={name,contact:document.getElementById("prov-contact").value||null,phone:document.getElementById("prov-phone").value||null,speciality:document.getElementById("prov-speciality").value||null,area:document.getElementById("prov-area").value||null,rate:document.getElementById("prov-rate").value||null,notes:document.getElementById("prov-notes").value||null,availability:document.getElementById("prov-availability").value,rating:document.getElementById("prov-rating").value||null};
+  try{
+    if(id){await dbUpdate("providers",id,data);notify("✓ Provider updated");}
+    else{const newId="P"+String(providers.length+1).padStart(3,"0");await dbInsert("providers",{id:newId,...data});notify(`✓ ${name} added`);}
+    closeModal("provider-modal");await loadAll();
+  }catch(e){notify("Error: "+e.message,"error");}
+}
+async function deleteProvider(){
+  const id=document.getElementById("prov-id").value;if(!id)return;
+  if(!confirm("Delete this provider?"))return;
+  try{const{error}=await db.from("providers").delete().eq("id",id);if(error)throw error;notify("✓ Deleted");closeModal("provider-modal");await loadAll();}
+  catch(e){notify("Error: "+e.message,"error");}
+}
+
+// ── Job CRUD ──────────────────────────────────────────────────────────────────
+function openEditJob(id){
+  const j=jobs.find(j=>j.id===id);if(!j)return;
+  document.getElementById("aj-client-id").value=j.client_id||"";
+  document.getElementById("aj-client-name").textContent=j.client_name?"For: "+j.client_name:"";
+  document.getElementById("aj-invoice").value=j.id||"";
+  document.getElementById("aj-address").value=j.address||"";
+  document.getElementById("aj-beds").value=j.beds||"";
+  document.getElementById("aj-service").value=j.service||"Damp Survey";
+  document.getElementById("aj-date").value=j.job_date||"";
+  document.getElementById("aj-status").value=j.status||"Quote Sent";
+  document.getElementById("aj-notes").value=j.notes||"";
+  document.getElementById("aj-editing-id").value=j.id;
+  document.getElementById("aj-modal-title").textContent="Edit Job";
+  document.getElementById("aj-delete-btn").style.display="inline-block";
+  document.getElementById("add-job-modal").style.display="flex";
+}
+async function deleteJob(){
+  const id=document.getElementById("aj-editing-id").value;if(!id)return;
+  if(!confirm("Delete this job?"))return;
+  try{const{error}=await db.from("jobs").delete().eq("id",id);if(error)throw error;notify("✓ Job deleted");closeModal("add-job-modal");await loadAll();}
+  catch(e){notify("Error: "+e.message,"error");}
 }
 
 document.addEventListener("DOMContentLoaded",()=>{
