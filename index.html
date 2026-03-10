@@ -11,8 +11,6 @@
   *{box-sizing:border-box;margin:0;padding:0;}
   html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;}
   ::-webkit-scrollbar{width:4px;height:4px;}::-webkit-scrollbar-thumb{background:#2A2D3A;border-radius:2px;}
-
-  /* ── Auth ── */
   #auth-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px;}
   .auth-box{width:100%;max-width:380px;text-align:center;}
   .auth-icon{width:56px;height:56px;background:linear-gradient(135deg,var(--blue),var(--green));border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 20px;}
@@ -20,8 +18,6 @@
   .auth-sub{color:var(--dim);font-size:13px;margin-bottom:28px;line-height:1.6;}
   .auth-error{background:#E74C3C18;border:1px solid #E74C3C44;border-radius:8px;padding:10px 14px;margin-bottom:16px;font-size:12px;color:#E74C3C;display:none;text-align:left;}
   .auth-success{background:#2ECC7118;border:1px solid #2ECC7144;border-radius:8px;padding:16px;margin-bottom:16px;font-size:13px;color:#2ECC71;display:none;text-align:left;line-height:1.6;}
-
-  /* ── App ── */
   #app{display:none;flex-direction:column;height:100vh;}
   #header{display:flex;align-items:center;justify-content:space-between;padding:0 20px;height:56px;border-bottom:1px solid var(--border);flex-shrink:0;}
   #tabs{display:flex;gap:2px;padding:0 20px;border-bottom:1px solid var(--border);flex-shrink:0;}
@@ -30,8 +26,6 @@
   .logo-icon{width:28px;height:28px;background:linear-gradient(135deg,var(--blue),var(--green));border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;}
   .logo-title{font-family:'DM Serif Display',serif;font-size:16px;}
   .sync-dot{display:inline-block;width:7px;height:7px;border-radius:50%;transition:background .3s;}
-
-  /* ── Shared ── */
   .tab{background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;padding:10px 14px;font-family:inherit;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;transition:all .2s;color:var(--dim);}
   .tab.active{color:var(--blue);border-bottom-color:var(--blue);}
   .tab:hover:not(.active){color:#888;}
@@ -51,8 +45,6 @@
   .card:hover{border-color:#6B7EFF44;transform:translateY(-1px);}
   .card-static{cursor:default;}
   .pill{display:inline-block;padding:2px 9px;border-radius:20px;font-size:10px;font-weight:700;}
-
-  /* ── Kanban ── */
   #kanban-wrap{padding:20px;overflow-x:auto;}
   #kanban{display:flex;gap:14px;min-width:max-content;}
   .col{min-width:200px;flex:0 0 200px;}
@@ -61,8 +53,6 @@
   .col-count{margin-left:auto;background:#1A1D2A;border-radius:20px;padding:1px 7px;font-size:10px;color:#444;}
   .col-add{border:1px dashed var(--border);border-radius:8px;padding:8px;text-align:center;font-size:11px;color:var(--dimmer);cursor:pointer;transition:all .2s;}
   .col-add:hover{border-color:var(--blue);color:var(--blue);}
-
-  /* ── Chat ── */
   #chat-wrap{display:flex;flex-direction:column;height:100%;max-width:680px;margin:0 auto;padding:20px;gap:12px;}
   #chat-messages{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:10px;}
   .bubble{padding:11px 15px;border-radius:12px;max-width:86%;font-size:13px;line-height:1.65;white-space:pre-wrap;}
@@ -72,26 +62,18 @@
   .hint-btn:hover{border-color:var(--blue);color:var(--blue);}
   .typing span{display:inline-block;width:5px;height:5px;border-radius:50%;background:#555;margin:0 2px;animation:blink 1.2s infinite;}
   .typing span:nth-child(2){animation-delay:.2s;}.typing span:nth-child(3){animation-delay:.4s;}
-
-  /* ── Email ── */
   #email-wrap{padding:24px;max-width:700px;margin:0 auto;}
   .field-label{font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;display:block;}
   .field-row{display:flex;gap:14px;margin-bottom:18px;flex-wrap:wrap;}
   .field-group{flex:1;min-width:160px;}
-
-  /* ── Pricing ── */
   #pricing-wrap{padding:20px;overflow-x:auto;}
   .price-table{border-collapse:collapse;width:100%;min-width:660px;}
   .price-table th{padding:10px 12px;font-size:10px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid var(--border);}
   .price-table td{padding:10px 12px;border-bottom:1px solid #0D1018;}
   .price-val{color:var(--green);font-weight:700;font-size:13px;}
   .price-poa{color:var(--dim);font-style:italic;font-size:11px;}
-
-  /* ── Providers ── */
   #providers-wrap{padding:20px;}
   .provider-grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));}
-
-  /* ── Modals ── */
   .modal-bg{position:fixed;inset:0;background:#000000BB;z-index:100;display:flex;align-items:center;justify-content:center;padding:20px;}
   .modal{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:26px;width:100%;max-width:520px;max-height:82vh;overflow-y:auto;}
   .modal-title{font-family:'DM Serif Display',serif;font-size:20px;margin-bottom:6px;}
@@ -103,8 +85,6 @@
   .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
   .form-grid .full{grid-column:1/-1;}
   .form-label{font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px;display:block;}
-
-  /* ── Misc ── */
   #notif{position:fixed;bottom:20px;right:20px;padding:10px 18px;border-radius:8px;font-size:13px;font-weight:600;z-index:999;display:none;animation:slideUp .2s ease;}
   .spinner{width:18px;height:18px;border:2px solid var(--border);border-top-color:var(--blue);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto;}
   .loading-state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px;gap:14px;}
@@ -119,12 +99,12 @@
 <body>
 <div id="notif"></div>
 
-<!-- ── LOGIN ── -->
+<!-- LOGIN -->
 <div id="auth-screen">
   <div class="auth-box">
     <div class="auth-icon">🏠</div>
     <div class="auth-title">Survey Remedy CRM</div>
-    <div class="auth-sub" id="auth-sub">Enter your email and we'll send you a magic link to sign in — no password needed.</div>
+    <div class="auth-sub" id="auth-sub">Enter your email and we'll send you a magic link — no password needed.</div>
     <div id="auth-error" class="auth-error"></div>
     <div id="auth-success" class="auth-success"></div>
     <div id="auth-form">
@@ -137,7 +117,7 @@
   </div>
 </div>
 
-<!-- ── APP ── -->
+<!-- APP -->
 <div id="app">
   <div id="header">
     <div class="logo">
@@ -153,7 +133,6 @@
       <button class="btn btn-ghost" onclick="signOut()" style="font-size:11px">Sign out</button>
     </div>
   </div>
-
   <div id="tabs">
     <button class="tab active" onclick="showView('kanban',this)">📋 Board</button>
     <button class="tab" onclick="showView('chat',this)">💬 Chat</button>
@@ -161,10 +140,8 @@
     <button class="tab" onclick="showView('pricing',this)">£ Pricing</button>
     <button class="tab" onclick="showView('providers',this)">🔧 Providers</button>
   </div>
-
   <div id="main">
     <div id="view-kanban"><div id="kanban-wrap"><div id="kanban"><div class="loading-state"><div class="spinner"></div><p>Loading…</p></div></div></div></div>
-
     <div id="view-chat" style="display:none;height:calc(100vh - 116px)">
       <div id="chat-wrap">
         <div id="chat-messages"></div>
@@ -181,7 +158,6 @@
         </div>
       </div>
     </div>
-
     <div id="view-email" style="display:none">
       <div id="email-wrap">
         <div class="field-row">
@@ -203,7 +179,6 @@
         </div>
       </div>
     </div>
-
     <div id="view-pricing" style="display:none">
       <div id="pricing-wrap">
         <p style="font-size:11px;color:var(--dim);margin-bottom:16px">Client-facing prices. Reference when quoting.</p>
@@ -219,7 +194,6 @@
         </table>
       </div>
     </div>
-
     <div id="view-providers" style="display:none">
       <div id="providers-wrap"><div id="provider-grid" class="provider-grid"></div></div>
     </div>
@@ -284,242 +258,126 @@
 </div>
 
 <script>
-const SB_URL = "https://clhtrqhndszhfzmsfoth.supabase.co";
-const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNsaHRycWhuZHN6aGZ6bXNmb3RoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA5OTI5MDUsImV4cCI6MjA3NjU2ODkwNX0.XLOUh0jMg2t3ZflvxBZ3DvDLEvJRe_J-QLTf7TSSnyQ";
-const { createClient } = supabase;
-const db = createClient(SB_URL, SB_KEY);
-
-const SERVICES = ["Damp Survey","Mould Survey","Structural Engineer","Roof Inspection","EPC","EICR (Landlord)","EICR (Homeowner)","Gas Safety Check"];
-const STATUSES = [
-  {id:"Inbox",color:"#6B7EFF",bg:"#6B7EFF18"},{id:"Waiting",color:"#F5A623",bg:"#F5A62318"},
-  {id:"Active",color:"#4CAF96",bg:"#4CAF9618"},{id:"Ready",color:"#9B6BFF",bg:"#9B6BFF18"},
-  {id:"Done",color:"#2ECC71",bg:"#2ECC7118"},{id:"Cold Lead",color:"#95A5A6",bg:"#95A5A618"},
-  {id:"Past Client",color:"#BDC3C7",bg:"#BDC3C718"},
-];
-const PRICING = [
-  {s:"Damp Survey",p:["£150","£175","£200","£225","£250","POA"],d:"2–3 hrs"},
-  {s:"Mould Survey",p:["£150","£175","£200","£225","£250","POA"],d:"2–3 hrs"},
-  {s:"Structural Engineer",p:["POA","POA","POA","POA","POA","POA"],d:"Half day+"},
-  {s:"Roof Inspection",p:["£150","£150","£175","£200","£225","POA"],d:"1–2 hrs"},
-  {s:"EPC",p:["£80","£90","£100","£110","£120","POA"],d:"1–2 hrs"},
-  {s:"EICR (Landlord)",p:["£150","£175","£200","£250","£300","POA"],d:"3–5 hrs"},
-  {s:"EICR (Homeowner)",p:["£200","£225","£275","£325","£375","POA"],d:"4–6 hrs"},
-  {s:"Gas Safety Check",p:["£80","£80","£80","£100","£100","POA"],d:"1–2 hrs"},
-];
-
-let clients=[], interactions=[], providers=[], chatHistory=[];
+const SB_URL="https://clhtrqhndszhfzmsfoth.supabase.co";
+const SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNsaHRycWhuZHN6aGZ6bXNmb3RoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA5OTI5MDUsImV4cCI6MjA3NjU2ODkwNX0.XLOUh0jMg2t3ZflvxBZ3DvDLEvJRe_J-QLTf7TSSnyQ";
+const{createClient}=supabase;
+const db=createClient(SB_URL,SB_KEY);
+const SERVICES=["Damp Survey","Mould Survey","Structural Engineer","Roof Inspection","EPC","EICR (Landlord)","EICR (Homeowner)","Gas Safety Check"];
+const STATUSES=[{id:"Inbox",color:"#6B7EFF",bg:"#6B7EFF18"},{id:"Waiting",color:"#F5A623",bg:"#F5A62318"},{id:"Active",color:"#4CAF96",bg:"#4CAF9618"},{id:"Ready",color:"#9B6BFF",bg:"#9B6BFF18"},{id:"Done",color:"#2ECC71",bg:"#2ECC7118"},{id:"Cold Lead",color:"#95A5A6",bg:"#95A5A618"},{id:"Past Client",color:"#BDC3C7",bg:"#BDC3C718"}];
+const PRICING=[{s:"Damp Survey",p:["£150","£175","£200","£225","£250","POA"],d:"2–3 hrs"},{s:"Mould Survey",p:["£150","£175","£200","£225","£250","POA"],d:"2–3 hrs"},{s:"Structural Engineer",p:["POA","POA","POA","POA","POA","POA"],d:"Half day+"},{s:"Roof Inspection",p:["£150","£150","£175","£200","£225","POA"],d:"1–2 hrs"},{s:"EPC",p:["£80","£90","£100","£110","£120","POA"],d:"1–2 hrs"},{s:"EICR (Landlord)",p:["£150","£175","£200","£250","£300","POA"],d:"3–5 hrs"},{s:"EICR (Homeowner)",p:["£200","£225","£275","£325","£375","POA"],d:"4–6 hrs"},{s:"Gas Safety Check",p:["£80","£80","£80","£100","£100","POA"],d:"1–2 hrs"}];
+let clients=[],interactions=[],providers=[],chatHistory=[];
 
 // ── Auth ──────────────────────────────────────────────────────────────────────
-async function sendMagicLink() {
-  const email = document.getElementById("login-email").value.trim();
-  if (!email) { showAuthError("Please enter your email address."); return; }
-  const btn = document.getElementById("login-btn");
-  btn.textContent = "Sending…"; btn.disabled = true;
-  document.getElementById("auth-error").style.display = "none";
-
-  const { error } = await db.auth.signInWithOtp({
-    email,
-    options: { shouldCreateUser: false } // only existing users can sign in
-  });
-
-  if (error) {
-    showAuthError(error.message);
-    btn.textContent = "Send Magic Link ✉️"; btn.disabled = false;
-    return;
-  }
-
-  // Show success state
-  document.getElementById("auth-form").style.display = "none";
-  document.getElementById("auth-sub").style.display = "none";
-  const s = document.getElementById("auth-success");
-  s.style.display = "block";
-  s.innerHTML = `✉️ Magic link sent to <strong>${email}</strong><br><br>Check your inbox and click the link to sign in. You can close this tab.`;
+async function sendMagicLink(){
+  const email=document.getElementById("login-email").value.trim();
+  if(!email){showAuthError("Please enter your email.");return;}
+  const btn=document.getElementById("login-btn");
+  btn.textContent="Sending…";btn.disabled=true;
+  document.getElementById("auth-error").style.display="none";
+  const{error}=await db.auth.signInWithOtp({email,options:{shouldCreateUser:false}});
+  if(error){showAuthError(error.message);btn.textContent="Send Magic Link ✉️";btn.disabled=false;return;}
+  document.getElementById("auth-form").style.display="none";
+  document.getElementById("auth-sub").style.display="none";
+  const s=document.getElementById("auth-success");
+  s.style.display="block";
+  s.innerHTML=`✉️ Magic link sent to <strong>${email}</strong><br><br>Check your inbox and click the link to sign in.`;
 }
-
-function showAuthError(msg) {
-  const el = document.getElementById("auth-error");
-  el.textContent = "⚠️ " + msg; el.style.display = "block";
-}
-
-async function signOut() {
+function showAuthError(msg){const el=document.getElementById("auth-error");el.textContent="⚠️ "+msg;el.style.display="block";}
+async function signOut(){
   await db.auth.signOut();
-  document.getElementById("app").style.display = "none";
-  document.getElementById("auth-screen").style.display = "flex";
-  document.getElementById("auth-form").style.display = "block";
-  document.getElementById("auth-sub").style.display = "block";
-  document.getElementById("auth-success").style.display = "none";
-  document.getElementById("login-btn").textContent = "Send Magic Link ✉️";
-  document.getElementById("login-btn").disabled = false;
-  document.getElementById("login-email").value = "";
+  document.getElementById("app").style.display="none";
+  document.getElementById("auth-screen").style.display="flex";
+  document.getElementById("auth-form").style.display="block";
+  document.getElementById("auth-sub").style.display="block";
+  document.getElementById("auth-success").style.display="none";
+  document.getElementById("login-btn").textContent="Send Magic Link ✉️";
+  document.getElementById("login-btn").disabled=false;
+  document.getElementById("login-email").value="";
 }
-
-function showApp() {
-  document.getElementById("auth-screen").style.display = "none";
-  document.getElementById("app").style.display = "flex";
+function showApp(){
+  document.getElementById("auth-screen").style.display="none";
+  document.getElementById("app").style.display="flex";
   loadAll();
 }
-
-// Handle magic link redirect & session on load
-db.auth.onAuthStateChange((event, session) => {
-  if (session) showApp();
-});
+db.auth.onAuthStateChange((event,session)=>{if(session)showApp();});
 
 // ── Data ──────────────────────────────────────────────────────────────────────
-async function loadAll() {
+async function loadAll(){
   setSyncStatus("syncing");
-  try {
-    const [c, i, p] = await Promise.all([
+  try{
+    const[c,i,p]=await Promise.all([
       db.from("clients").select("*").order("created_at"),
       db.from("interactions").select("*").order("created_at"),
       db.from("providers").select("*").order("created_at"),
     ]);
-    if (c.error) throw c.error;
-    clients=c.data||[]; interactions=i.data||[]; providers=p.data||[];
-    document.getElementById("client-count").textContent = `${clients.length} clients`;
-    renderKanban(); renderProviders(); populateEmailClients();
+    if(c.error)throw c.error;
+    clients=c.data||[];interactions=i.data||[];providers=p.data||[];
+    document.getElementById("client-count").textContent=`${clients.length} clients`;
+    renderKanban();renderProviders();populateEmailClients();
     setSyncStatus("synced");
-  } catch(e) {
-    setSyncStatus("error");
-    notify("Error: " + e.message, "error");
-  }
+  }catch(e){setSyncStatus("error");notify("Error: "+e.message,"error");}
 }
-
-async function dbInsert(table, data) {
-  const { error } = await db.from(table).insert(data);
-  if (error) throw error;
-}
-async function dbUpdate(table, id, data) {
-  const { error } = await db.from(table).update(data).eq("id", id);
-  if (error) throw error;
-}
+async function dbInsert(table,data){const{error}=await db.from(table).insert(data);if(error)throw error;}
+async function dbUpdate(table,id,data){const{error}=await db.from(table).update(data).eq("id",id);if(error)throw error;}
 
 // ── Kanban ────────────────────────────────────────────────────────────────────
-function renderKanban() {
-  const wrap = document.getElementById("kanban"); wrap.innerHTML = "";
-  STATUSES.forEach(s => {
-    const cc = clients.filter(c => c.status === s.id);
-    const col = document.createElement("div"); col.className = "col";
-    col.innerHTML =
-      `<div class="col-header"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${s.color}"></span><span class="col-title">${s.id}</span><span class="col-count">${cc.length}</span></div>` +
-      cc.map(c =>
-        `<div class="card" onclick="openClient('${c.id}')">
-          <div style="font-weight:600;font-size:12px;margin-bottom:4px">${c.name}</div>
-          <div style="display:flex;gap:4px;margin-bottom:5px;flex-wrap:wrap">
-            ${c.client_type?`<span class="pill" style="background:${s.bg};color:${s.color}">${c.client_type}</span>`:""}
-            ${c.beds?`<span class="pill" style="background:#1A1D2A;color:var(--dim)">${c.beds}bed</span>`:""}
-          </div>
-          <div style="font-size:11px;color:var(--blue);margin-bottom:3px">${c.service||""}</div>
-          ${c.address?`<div style="font-size:10px;color:#444">📍 ${c.address.substring(0,36)}${c.address.length>36?"…":""}</div>`:""}
-          ${c.follow_up?`<div style="font-size:10px;color:var(--orange);margin-top:5px">⏰ ${c.follow_up}</div>`:""}
-        </div>`).join("") +
+function renderKanban(){
+  const wrap=document.getElementById("kanban");wrap.innerHTML="";
+  STATUSES.forEach(s=>{
+    const cc=clients.filter(c=>c.status===s.id);
+    const col=document.createElement("div");col.className="col";
+    col.innerHTML=`<div class="col-header"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${s.color}"></span><span class="col-title">${s.id}</span><span class="col-count">${cc.length}</span></div>`+
+      cc.map(c=>`<div class="card" onclick="openClient('${c.id}')"><div style="font-weight:600;font-size:12px;margin-bottom:4px">${c.name}</div><div style="display:flex;gap:4px;margin-bottom:5px;flex-wrap:wrap">${c.client_type?`<span class="pill" style="background:${s.bg};color:${s.color}">${c.client_type}</span>`:""}${c.beds?`<span class="pill" style="background:#1A1D2A;color:var(--dim)">${c.beds}bed</span>`:""}</div><div style="font-size:11px;color:var(--blue);margin-bottom:3px">${c.service||""}</div>${c.address?`<div style="font-size:10px;color:#444">📍 ${c.address.substring(0,36)}${c.address.length>36?"…":""}</div>`:""}${c.follow_up?`<div style="font-size:10px;color:var(--orange);margin-top:5px">⏰ ${c.follow_up}</div>`:""}</div>`).join("")+
       `<div class="col-add" onclick="openAddClient('${s.id}')">+ Add</div>`;
     wrap.appendChild(col);
   });
 }
-
-function openAddClient(status) {
-  document.getElementById("f-status").value = status || "Inbox";
-  document.getElementById("add-client-modal").style.display = "flex";
-}
-
-async function submitNewClient() {
-  const name = document.getElementById("f-name").value.trim();
-  if (!name) { notify("Name is required", "error"); return; }
-  const newId = "C" + String(clients.length + 1).padStart(3, "0");
-  try {
-    await dbInsert("clients", {
-      id:newId, name,
-      company:     document.getElementById("f-company").value || null,
-      client_type: document.getElementById("f-type").value,
-      service:     document.getElementById("f-service").value,
-      email:       document.getElementById("f-email").value || null,
-      phone:       document.getElementById("f-phone").value || null,
-      address:     document.getElementById("f-address").value || null,
-      beds:        document.getElementById("f-beds").value || null,
-      status:      document.getElementById("f-status").value,
-      source:      document.getElementById("f-source").value,
-      follow_up:   document.getElementById("f-followup").value || null,
-      invoice_refs:document.getElementById("f-invoice").value || null,
-      drive_link:  document.getElementById("f-drive").value || null,
-      date_added:  new Date().toISOString().split("T")[0],
-    });
-    notify(`✓ ${name} saved`);
-    closeModal("add-client-modal");
-    ["f-name","f-company","f-email","f-phone","f-address","f-beds","f-followup","f-invoice","f-drive"].forEach(id => document.getElementById(id).value = "");
+function openAddClient(status){document.getElementById("f-status").value=status||"Inbox";document.getElementById("add-client-modal").style.display="flex";}
+async function submitNewClient(){
+  const name=document.getElementById("f-name").value.trim();
+  if(!name){notify("Name is required","error");return;}
+  const newId="C"+String(clients.length+1).padStart(3,"0");
+  try{
+    await dbInsert("clients",{id:newId,name,company:document.getElementById("f-company").value||null,client_type:document.getElementById("f-type").value,service:document.getElementById("f-service").value,email:document.getElementById("f-email").value||null,phone:document.getElementById("f-phone").value||null,address:document.getElementById("f-address").value||null,beds:document.getElementById("f-beds").value||null,status:document.getElementById("f-status").value,source:document.getElementById("f-source").value,follow_up:document.getElementById("f-followup").value||null,invoice_refs:document.getElementById("f-invoice").value||null,drive_link:document.getElementById("f-drive").value||null,date_added:new Date().toISOString().split("T")[0]});
+    notify(`✓ ${name} saved`);closeModal("add-client-modal");
+    ["f-name","f-company","f-email","f-phone","f-address","f-beds","f-followup","f-invoice","f-drive"].forEach(id=>document.getElementById(id).value="");
     await loadAll();
-  } catch(e) { notify("Error: " + e.message, "error"); }
+  }catch(e){notify("Error: "+e.message,"error");}
 }
 
 // ── Client modal ──────────────────────────────────────────────────────────────
-function openClient(id) {
-  const c = clients.find(c => c.id === id); if (!c) return;
-  const s = STATUSES.find(s => s.id === c.status);
-  document.getElementById("modal-name").textContent = c.name;
-  document.getElementById("modal-pills").innerHTML = [
-    c.client_type ? `<span class="pill" style="background:#6B7EFF18;color:var(--blue)">${c.client_type}</span>` : "",
-    c.status      ? `<span class="pill" style="background:${s?.bg||"#1E2230"};color:${s?.color||"#888"}">${c.status}</span>` : "",
-    c.beds        ? `<span class="pill" style="background:#1A1D2A;color:var(--dim)">${c.beds} bed</span>` : "",
-  ].join("");
-  document.getElementById("modal-details").innerHTML = [
-    ["Service",c.service],["Email",c.email],["Phone",c.phone],["Address",c.address],
-    ["Follow Up",c.follow_up||"—"],["Invoice Refs",c.invoice_refs||"—"],["Source",c.source],["Date Added",c.date_added]
-  ].filter(([,v])=>v).map(([l,v])=>`<div><div class="detail-label">${l}</div><div class="detail-value">${v}</div></div>`).join("");
-  const dw = document.getElementById("modal-drive");
-  if (c.drive_link){dw.style.display="block";document.getElementById("modal-drive-link").href=c.drive_link;}else dw.style.display="none";
-  const ci = interactions.filter(i => i.client_id === c.id);
-  const iw = document.getElementById("modal-interactions");
-  if (ci.length) {
-    iw.style.display = "block";
-    document.getElementById("modal-int-list").innerHTML = ci.map(i =>
-      `<div style="display:flex;gap:10px;margin-bottom:8px;font-size:12px;padding-bottom:8px;border-bottom:1px solid var(--border)">
-        <span style="color:#444;white-space:nowrap;min-width:80px">${i.date||""}</span>
-        <span style="color:var(--blue);min-width:70px">${i.type||""}</span>
-        <span style="color:var(--muted)">${i.notes||""}</span>
-      </div>`).join("");
-  } else iw.style.display = "none";
-  document.getElementById("modal-email-btn").onclick  = () => { showView("email",document.querySelectorAll(".tab")[2]); document.getElementById("email-client").value=c.id; updateEmail(); closeModal("client-modal"); };
-  document.getElementById("modal-note-btn").onclick   = () => { showView("chat",document.querySelectorAll(".tab")[1]); setHint(`Log interaction with ${c.name}`); closeModal("client-modal"); };
-  document.getElementById("modal-status-btn").onclick = () => { showView("chat",document.querySelectorAll(".tab")[1]); setHint(`Move ${c.name} to `); closeModal("client-modal"); };
-  document.getElementById("client-modal").style.display = "flex";
+function openClient(id){
+  const c=clients.find(c=>c.id===id);if(!c)return;
+  const s=STATUSES.find(s=>s.id===c.status);
+  document.getElementById("modal-name").textContent=c.name;
+  document.getElementById("modal-pills").innerHTML=[c.client_type?`<span class="pill" style="background:#6B7EFF18;color:var(--blue)">${c.client_type}</span>`:"",c.status?`<span class="pill" style="background:${s?.bg||"#1E2230"};color:${s?.color||"#888"}">${c.status}</span>`:"",c.beds?`<span class="pill" style="background:#1A1D2A;color:var(--dim)">${c.beds} bed</span>`:""].join("");
+  document.getElementById("modal-details").innerHTML=[["Service",c.service],["Email",c.email],["Phone",c.phone],["Address",c.address],["Follow Up",c.follow_up||"—"],["Invoice Refs",c.invoice_refs||"—"],["Source",c.source],["Date Added",c.date_added]].filter(([,v])=>v).map(([l,v])=>`<div><div class="detail-label">${l}</div><div class="detail-value">${v}</div></div>`).join("");
+  const dw=document.getElementById("modal-drive");
+  if(c.drive_link){dw.style.display="block";document.getElementById("modal-drive-link").href=c.drive_link;}else dw.style.display="none";
+  const ci=interactions.filter(i=>i.client_id===c.id);
+  const iw=document.getElementById("modal-interactions");
+  if(ci.length){iw.style.display="block";document.getElementById("modal-int-list").innerHTML=ci.map(i=>`<div style="display:flex;gap:10px;margin-bottom:8px;font-size:12px;padding-bottom:8px;border-bottom:1px solid var(--border)"><span style="color:#444;white-space:nowrap;min-width:80px">${i.date||""}</span><span style="color:var(--blue);min-width:70px">${i.type||""}</span><span style="color:var(--muted)">${i.notes||""}</span></div>`).join("");}else iw.style.display="none";
+  document.getElementById("modal-email-btn").onclick=()=>{showView("email",document.querySelectorAll(".tab")[2]);document.getElementById("email-client").value=c.id;updateEmail();closeModal("client-modal");};
+  document.getElementById("modal-note-btn").onclick=()=>{showView("chat",document.querySelectorAll(".tab")[1]);setHint(`Log interaction with ${c.name}`);closeModal("client-modal");};
+  document.getElementById("modal-status-btn").onclick=()=>{showView("chat",document.querySelectorAll(".tab")[1]);setHint(`Move ${c.name} to `);closeModal("client-modal");};
+  document.getElementById("client-modal").style.display="flex";
 }
 function closeModal(id){document.getElementById(id).style.display="none";}
 
 // ── Providers ─────────────────────────────────────────────────────────────────
-function renderProviders() {
-  const g = document.getElementById("provider-grid");
-  if (!providers.length){g.innerHTML=`<div class="empty-state">No providers yet.</div>`;return;}
-  g.innerHTML = providers.map(p =>
-    `<div class="card card-static">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
-        <div style="font-weight:700;font-size:13px">${p.name}</div>
-        <span class="pill" style="background:${p.availability==="Available"?"#2ECC7120":"#E74C3C20"};color:${p.availability==="Available"?"#2ECC71":"#E74C3C"}">${p.availability||"—"}</span>
-      </div>
-      <div style="font-size:11px;color:var(--blue);margin-bottom:6px">${p.speciality||""}</div>
-      <div style="font-size:11px;color:var(--dim);margin-bottom:3px">📞 ${p.phone||""} · ${p.contact||""}</div>
-      <div style="font-size:11px;color:var(--dim)">📍 ${p.area||""}</div>
-      <div style="display:flex;gap:14px;margin-top:8px;padding-top:8px;border-top:1px solid var(--border)">
-        <div style="font-size:11px"><span style="color:var(--dim)">Rate </span><span style="color:var(--green);font-weight:700">${p.rate||"—"}</span></div>
-        <div style="font-size:11px"><span style="color:var(--dim)">Rating </span><span style="color:var(--orange);font-weight:700">${"★".repeat(Math.min(parseInt(p.rating)||0,5))}</span></div>
-      </div>
-      ${p.notes?`<div style="font-size:10px;color:#444;margin-top:6px;line-height:1.5">${p.notes}</div>`:""}</div>`).join("");
+function renderProviders(){
+  const g=document.getElementById("provider-grid");
+  if(!providers.length){g.innerHTML=`<div class="empty-state">No providers yet.</div>`;return;}
+  g.innerHTML=providers.map(p=>`<div class="card card-static"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px"><div style="font-weight:700;font-size:13px">${p.name}</div><span class="pill" style="background:${p.availability==="Available"?"#2ECC7120":"#E74C3C20"};color:${p.availability==="Available"?"#2ECC71":"#E74C3C"}">${p.availability||"—"}</span></div><div style="font-size:11px;color:var(--blue);margin-bottom:6px">${p.speciality||""}</div><div style="font-size:11px;color:var(--dim);margin-bottom:3px">📞 ${p.phone||""} · ${p.contact||""}</div><div style="font-size:11px;color:var(--dim)">📍 ${p.area||""}</div><div style="display:flex;gap:14px;margin-top:8px;padding-top:8px;border-top:1px solid var(--border)"><div style="font-size:11px"><span style="color:var(--dim)">Rate </span><span style="color:var(--green);font-weight:700">${p.rate||"—"}</span></div><div style="font-size:11px"><span style="color:var(--dim)">Rating </span><span style="color:var(--orange);font-weight:700">${"★".repeat(Math.min(parseInt(p.rating)||0,5))}</span></div></div>${p.notes?`<div style="font-size:10px;color:#444;margin-top:6px;line-height:1.5">${p.notes}</div>`:""}</div>`).join("");
 }
 
 // ── Email ─────────────────────────────────────────────────────────────────────
-function populateEmailClients(){
-  const sel=document.getElementById("email-client"),cur=sel.value;
-  sel.innerHTML=`<option value="">— Generic —</option>`+clients.map(c=>`<option value="${c.id}">${c.name}</option>`).join("");
-  sel.value=cur; updateEmail();
-}
+function populateEmailClients(){const sel=document.getElementById("email-client"),cur=sel.value;sel.innerHTML=`<option value="">— Generic —</option>`+clients.map(c=>`<option value="${c.id}">${c.name}</option>`).join("");sel.value=cur;updateEmail();}
 function updateEmail(){
   const tpl=document.getElementById("email-template").value;
   const c=clients.find(cl=>cl.id===document.getElementById("email-client").value);
   const n=c?.name?.split(" ")[0]||"[Name]";
-  const T={
-    confirmation:{subject:`Confirmation – ${c?.name||"[Client]"}`,body:`Hi ${n},\n\nThank you for getting in touch. I can confirm I've received your enquiry regarding ${c?.service||"[service]"} at ${c?.address||"[property address]"}.\n\nI'll be in touch shortly to discuss next steps.\n\nWarm regards,\n[Your Name]`},
-    quote:{subject:`Your Quote – ${c?.name||"[Client]"}`,body:`Hi ${n},\n\nPlease find below our proposed fee for ${c?.service||"[service]"} at ${c?.address||"[address]"}:\n\n• Service: ${c?.service||"[Service]"}\n• Property: ${c?.beds||"[X]"} bedroom\n• Fee: £[Amount]\n• Estimated date: [Date]\n\nPlease reply to confirm.\n\nWarm regards,\n[Your Name]`},
-    reminder:{subject:`Appointment Reminder – ${c?.name||"[Client]"}`,body:`Hi ${n},\n\nJust a reminder about your upcoming appointment:\n\n📅 Date: [Date]\n🕐 Time: [Time]\n📍 Address: ${c?.address||"[Address]"}\n🔧 Service: ${c?.service||"[Service]"}\n\nLet me know if you need to reschedule.\n\nWarm regards,\n[Your Name]`},
-    followup:{subject:`Following Up – ${c?.name||"[Client]"}`,body:`Hi ${n},\n\nI hope you're well. I wanted to follow up on our recent conversation about ${c?.service||"[service]"} at ${c?.address||"[property]"}.\n\nAre you still looking to proceed?\n\nWarm regards,\n[Your Name]`},
-  };
+  const T={confirmation:{subject:`Confirmation – ${c?.name||"[Client]"}`,body:`Hi ${n},\n\nThank you for getting in touch. I can confirm I've received your enquiry regarding ${c?.service||"[service]"} at ${c?.address||"[property address]"}.\n\nI'll be in touch shortly to discuss next steps.\n\nWarm regards,\n[Your Name]`},quote:{subject:`Your Quote – ${c?.name||"[Client]"}`,body:`Hi ${n},\n\nPlease find below our proposed fee for ${c?.service||"[service]"} at ${c?.address||"[address]"}:\n\n• Service: ${c?.service||"[Service]"}\n• Property: ${c?.beds||"[X]"} bedroom\n• Fee: £[Amount]\n• Estimated date: [Date]\n\nPlease reply to confirm.\n\nWarm regards,\n[Your Name]`},reminder:{subject:`Appointment Reminder – ${c?.name||"[Client]"}`,body:`Hi ${n},\n\nJust a reminder about your upcoming appointment:\n\n📅 Date: [Date]\n🕐 Time: [Time]\n📍 Address: ${c?.address||"[Address]"}\n🔧 Service: ${c?.service||"[Service]"}\n\nLet me know if you need to reschedule.\n\nWarm regards,\n[Your Name]`},followup:{subject:`Following Up – ${c?.name||"[Client]"}`,body:`Hi ${n},\n\nI hope you're well. I wanted to follow up on our recent conversation about ${c?.service||"[service]"} at ${c?.address||"[property]"}.\n\nAre you still looking to proceed?\n\nWarm regards,\n[Your Name]`}};
   document.getElementById("email-subject").value=T[tpl].subject;
   document.getElementById("email-body").value=T[tpl].body;
 }
@@ -527,12 +385,7 @@ function copyEmail(){navigator.clipboard.writeText(`Subject: ${document.getEleme
 function openEmail(){window.location.href=`mailto:?subject=${encodeURIComponent(document.getElementById("email-subject").value)}&body=${encodeURIComponent(document.getElementById("email-body").value)}`;}
 
 // ── Chat ──────────────────────────────────────────────────────────────────────
-function addBubble(role,text){
-  const wrap=document.getElementById("chat-messages");
-  const div=document.createElement("div");div.style.cssText=`display:flex;justify-content:${role==="user"?"flex-end":"flex-start"}`;
-  const b=document.createElement("div");b.className=`bubble bubble-${role}`;b.textContent=text;
-  div.appendChild(b);wrap.appendChild(div);wrap.scrollTop=wrap.scrollHeight;
-}
+function addBubble(role,text){const wrap=document.getElementById("chat-messages");const div=document.createElement("div");div.style.cssText=`display:flex;justify-content:${role==="user"?"flex-end":"flex-start"}`;const b=document.createElement("div");b.className=`bubble bubble-${role}`;b.textContent=text;div.appendChild(b);wrap.appendChild(div);wrap.scrollTop=wrap.scrollHeight;}
 function addTyping(){const w=document.getElementById("chat-messages");const d=document.createElement("div");d.id="typing-indicator";d.style.cssText="display:flex;justify-content:flex-start";d.innerHTML=`<div class="bubble bubble-assistant"><div class="typing"><span></span><span></span><span></span></div></div>`;w.appendChild(d);w.scrollTop=w.scrollHeight;}
 function removeTyping(){document.getElementById("typing-indicator")?.remove();}
 function setHint(t){document.getElementById("chat-input").value=t+": ";document.getElementById("chat-input").focus();}
@@ -544,7 +397,8 @@ async function sendChat(){
   document.getElementById("chat-send-btn").disabled=true;addTyping();
   const clientList=clients.slice(0,30).map(c=>`${c.id}: ${c.name} (${c.client_type||"?"}, ${c.status}, ${c.service||"?"})`).join("\n");
   try{
-    const res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({
+    // Calls our Netlify Function — no CORS issues
+    const res=await fetch("/.netlify/functions/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({
       model:"claude-sonnet-4-20250514",max_tokens:1000,
       system:`You are a CRM assistant for Survey Remedy, a UK property care business.\nServices: ${SERVICES.join(", ")}.\nClients:\n${clientList}\n\nRespond briefly. Include a JSON action in <ACTION> tags when saving data.\nActions:\n- <ACTION>{"type":"add_client","name":"...","client_type":"Homeowner|Landlord|Estate Agent|Letting Agent|Tenant","email":"...","phone":"...","address":"...","beds":"...","service":"...","status":"Inbox","source":"","follow_up":"YYYY-MM-DD or null"}</ACTION>\n- <ACTION>{"type":"log_interaction","client_id":"...","client_name":"...","interaction_type":"Call|Email|WhatsApp|Site Visit|Quote Sent|Invoice Sent|Job Completed","notes":"...","follow_up_date":"YYYY-MM-DD or null","invoice":""}</ACTION>\n- <ACTION>{"type":"update_status","client_id":"...","status":"Inbox|Waiting|Active|Ready|Done|Cold Lead|Past Client"}</ACTION>\n- <ACTION>{"type":"set_followup","client_id":"...","date":"YYYY-MM-DD"}</ACTION>\n- <ACTION>{"type":"add_job","invoice":"...","client_id":"...","client_name":"...","service":"...","address":"...","beds":"...","job_date":"YYYY-MM-DD or null","job_status":"Quote Sent|Confirmed|Scheduled|Completed","notes":""}</ACTION>\nFind client_id from the clients list. Be concise.`,
       messages:chatHistory.slice(-10),
@@ -555,7 +409,7 @@ async function sendChat(){
     const display=full.replace(/<ACTION>[\s\S]*?<\/ACTION>/g,"").trim();
     if(am){try{await applyAction(JSON.parse(am[1]));}catch(e){console.error(e);}}
     removeTyping();addBubble("assistant",display);chatHistory.push({role:"assistant",content:display});
-  }catch(e){removeTyping();addBubble("assistant","Something went wrong. Please try again.");}
+  }catch(e){removeTyping();addBubble("assistant","Something went wrong: "+e.message);}
   document.getElementById("chat-send-btn").disabled=false;
 }
 
@@ -563,61 +417,23 @@ async function applyAction(action){
   setSyncStatus("syncing");
   try{
     const today=new Date().toISOString().split("T")[0];
-    if(action.type==="add_client"){
-      const newId="C"+String(clients.length+1).padStart(3,"0");
-      await dbInsert("clients",{id:newId,name:action.name||"",company:action.company||null,client_type:action.client_type||"",email:action.email||null,phone:action.phone||null,address:action.address||null,beds:action.beds||null,service:action.service||"",status:action.status||"Inbox",source:action.source||null,date_added:today,follow_up:action.follow_up||null});
-      notify(`✓ ${action.name} saved`);
-    }else if(action.type==="log_interaction"){
-      const newId="L"+String(interactions.length+1).padStart(3,"0");
-      await dbInsert("interactions",{id:newId,client_id:action.client_id||null,client_name:action.client_name||"",date:today,type:action.interaction_type||"Note",notes:action.notes||"",follow_up_date:action.follow_up_date||null,done:"No",invoice:action.invoice||null});
-      if(action.client_id)await dbUpdate("clients",action.client_id,{last_contact:today});
-      notify("✓ Interaction logged");
-    }else if(action.type==="update_status"){
-      await dbUpdate("clients",action.client_id,{status:action.status});
-      notify(`✓ Status → ${action.status}`);
-    }else if(action.type==="set_followup"){
-      await dbUpdate("clients",action.client_id,{follow_up:action.date});
-      notify(`✓ Follow-up set: ${action.date}`);
-    }else if(action.type==="add_job"){
-      const newId=action.invoice||"J"+String(Date.now()).slice(-6);
-      await dbInsert("jobs",{id:newId,client_id:action.client_id||null,client_name:action.client_name||"",address:action.address||null,beds:action.beds||null,service:action.service||"",job_date:action.job_date||null,status:action.job_status||"Quote Sent",notes:action.notes||null});
-      notify(`✓ Job ${newId} added`);
-    }
+    if(action.type==="add_client"){const newId="C"+String(clients.length+1).padStart(3,"0");await dbInsert("clients",{id:newId,name:action.name||"",company:action.company||null,client_type:action.client_type||"",email:action.email||null,phone:action.phone||null,address:action.address||null,beds:action.beds||null,service:action.service||"",status:action.status||"Inbox",source:action.source||null,date_added:today,follow_up:action.follow_up||null});notify(`✓ ${action.name} saved`);}
+    else if(action.type==="log_interaction"){const newId="L"+String(interactions.length+1).padStart(3,"0");await dbInsert("interactions",{id:newId,client_id:action.client_id||null,client_name:action.client_name||"",date:today,type:action.interaction_type||"Note",notes:action.notes||"",follow_up_date:action.follow_up_date||null,done:"No",invoice:action.invoice||null});if(action.client_id)await dbUpdate("clients",action.client_id,{last_contact:today});notify("✓ Interaction logged");}
+    else if(action.type==="update_status"){await dbUpdate("clients",action.client_id,{status:action.status});notify(`✓ Status → ${action.status}`);}
+    else if(action.type==="set_followup"){await dbUpdate("clients",action.client_id,{follow_up:action.date});notify(`✓ Follow-up set: ${action.date}`);}
+    else if(action.type==="add_job"){const newId=action.invoice||"J"+String(Date.now()).slice(-6);await dbInsert("jobs",{id:newId,client_id:action.client_id||null,client_name:action.client_name||"",address:action.address||null,beds:action.beds||null,service:action.service||"",job_date:action.job_date||null,status:action.job_status||"Quote Sent",notes:action.notes||null});notify(`✓ Job ${newId} added`);}
     await loadAll();setSyncStatus("synced");
   }catch(e){setSyncStatus("error");notify("Save error: "+e.message,"error");console.error(e);}
 }
 
-// ── UI helpers ────────────────────────────────────────────────────────────────
-function showView(id,tabEl){
-  ["kanban","chat","email","pricing","providers"].forEach(v=>{
-    document.getElementById("view-"+v).style.display=v===id?(v==="chat"?"flex":"block"):"none";
-  });
-  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
-  if(tabEl)tabEl.classList.add("active");
-}
-function setSyncStatus(s){
-  const c={idle:"var(--dim)",syncing:"var(--orange)",synced:"var(--emerald)",error:"var(--red)"};
-  const l={idle:"—",syncing:"Saving…",synced:"Synced ✓",error:"Error"};
-  document.getElementById("sync-dot").style.background=c[s];
-  document.getElementById("sync-dot").style.boxShadow=s==="syncing"?`0 0 6px ${c[s]}`:"none";
-  document.getElementById("sync-label").textContent=l[s];
-}
-function notify(msg,type="success"){
-  const el=document.getElementById("notif");
-  el.textContent=msg;el.style.background=type==="error"?"#E74C3C":"#2ECC71";
-  el.style.color="white";el.style.display="block";
-  setTimeout(()=>{el.style.display="none";},3500);
-}
+// ── UI ────────────────────────────────────────────────────────────────────────
+function showView(id,tabEl){["kanban","chat","email","pricing","providers"].forEach(v=>{document.getElementById("view-"+v).style.display=v===id?(v==="chat"?"flex":"block"):"none";});document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));if(tabEl)tabEl.classList.add("active");}
+function setSyncStatus(s){const c={idle:"var(--dim)",syncing:"var(--orange)",synced:"var(--emerald)",error:"var(--red)"};const l={idle:"—",syncing:"Saving…",synced:"Synced ✓",error:"Error"};document.getElementById("sync-dot").style.background=c[s];document.getElementById("sync-dot").style.boxShadow=s==="syncing"?`0 0 6px ${c[s]}`:"none";document.getElementById("sync-label").textContent=l[s];}
+function notify(msg,type="success"){const el=document.getElementById("notif");el.textContent=msg;el.style.background=type==="error"?"#E74C3C":"#2ECC71";el.style.color="white";el.style.display="block";setTimeout(()=>{el.style.display="none";},3500);}
 
 document.addEventListener("DOMContentLoaded",()=>{
   const tbody=document.getElementById("pricing-body");
-  PRICING.forEach((row,i)=>{
-    const tr=document.createElement("tr");tr.style.background=i%2===0?"var(--bg)":"#0D1018";
-    tr.innerHTML=`<td style="font-size:12px;font-weight:600;color:var(--muted);padding:10px 12px">${row.s}</td>`+
-      row.p.map(v=>`<td style="text-align:center;padding:10px 12px"><span class="${v==="POA"?"price-poa":"price-val"}">${v}</span></td>`).join("")+
-      `<td style="text-align:center;font-size:11px;color:var(--dim);font-style:italic;padding:10px 12px">${row.d}</td>`;
-    tbody.appendChild(tr);
-  });
+  PRICING.forEach((row,i)=>{const tr=document.createElement("tr");tr.style.background=i%2===0?"var(--bg)":"#0D1018";tr.innerHTML=`<td style="font-size:12px;font-weight:600;color:var(--muted);padding:10px 12px">${row.s}</td>`+row.p.map(v=>`<td style="text-align:center;padding:10px 12px"><span class="${v==="POA"?"price-poa":"price-val"}">${v}</span></td>`).join("")+`<td style="text-align:center;font-size:11px;color:var(--dim);font-style:italic;padding:10px 12px">${row.d}</td>`;tbody.appendChild(tr);});
   addBubble("assistant","Hi! Your Survey Remedy CRM is ready.\n\nTry:\n• \"New client: John Smith, landlord, john@email.com, 07700 123456, 3-bed EICR in Brixton\"\n• \"Log call with John Smith – confirmed the quote\"\n• \"Move John Smith to Active\"\n• \"Follow up with John Smith on 20th March\"\n\nOr click + Add on any board column.");
   updateEmail();
 });
