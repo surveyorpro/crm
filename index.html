@@ -638,7 +638,7 @@ async function submitAddJob(){
   }catch(e){notify("Error: "+e.message,"error");}
 }
 
-
+document.addEventListener("DOMContentLoaded",()=>{
   const tbody=document.getElementById("pricing-body");
   PRICING.forEach((row,i)=>{const tr=document.createElement("tr");tr.style.background=i%2===0?"var(--bg)":"#0D1018";tr.innerHTML=`<td style="font-size:12px;font-weight:600;color:var(--muted);padding:10px 12px">${row.s}</td>`+row.p.map(v=>`<td style="text-align:center;padding:10px 12px"><span class="${v==="POA"?"price-poa":"price-val"}">${v}</span></td>`).join("")+`<td style="text-align:center;font-size:11px;color:var(--dim);font-style:italic;padding:10px 12px">${row.d}</td>`;tbody.appendChild(tr);});
   addBubble("assistant","Hi! Your Survey Remedy CRM is ready.\n\nTry:\n• \"New client: John Smith, landlord, john@email.com, 07700 123456, 3-bed EICR in Brixton\"\n• \"Log call with John Smith – confirmed the quote\"\n• \"Move John Smith to Active\"\n• \"Follow up with John Smith on 20th March\"\n\nOr click + Add on any board column.");
