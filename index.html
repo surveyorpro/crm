@@ -212,10 +212,11 @@
     <div id="modal-interactions" style="display:none;margin-bottom:14px">
       <div class="detail-label" style="margin-bottom:8px">Interaction Log</div><div id="modal-int-list"></div>
     </div>
-    <div class="modal-actions">
+    <div class="modal-actions" style="flex-wrap:wrap">
       <button class="btn btn-primary" id="modal-email-btn" style="font-size:11px">✉ Email</button>
-      <button class="btn btn-secondary" id="modal-note-btn" style="font-size:11px">+ Log note</button>
-      <button class="btn btn-secondary" id="modal-status-btn" style="font-size:11px">✎ Status</button>
+      <button class="btn btn-secondary" id="modal-note-btn" style="font-size:11px">+ Log Interaction</button>
+      <button class="btn btn-secondary" id="modal-status-btn" style="font-size:11px">✎ Edit Client</button>
+      <button class="btn btn-secondary" id="modal-job-btn" style="font-size:11px">🔧 Add Job</button>
     </div>
   </div>
 </div>
@@ -253,6 +254,100 @@
     <div style="display:flex;gap:8px">
       <button class="btn btn-primary" onclick="submitNewClient()">Save Client</button>
       <button class="btn btn-ghost" onclick="closeModal('add-client-modal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- LOG INTERACTION MODAL -->
+<div id="log-interaction-modal" class="modal-bg" style="display:none" onclick="if(event.target===this)closeModal('log-interaction-modal')">
+  <div class="form-modal">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+      <div style="font-family:'DM Serif Display',serif;font-size:20px">Log Interaction</div>
+      <button class="btn btn-ghost" onclick="closeModal('log-interaction-modal')" style="font-size:16px;padding:3px 10px">×</button>
+    </div>
+    <div id="li-client-name" style="font-size:12px;color:var(--blue);margin-bottom:16px;font-weight:600"></div>
+    <input type="hidden" id="li-client-id"/>
+    <div class="form-grid">
+      <div><label class="form-label">Interaction Type</label>
+        <select class="inp" id="li-type">
+          <option>Call</option><option>Email</option><option>WhatsApp</option>
+          <option>Site Visit</option><option>Quote Sent</option><option>Invoice Sent</option><option>Job Completed</option>
+        </select>
+      </div>
+      <div><label class="form-label">Follow-Up Date</label><input class="inp" id="li-followup" type="date"/></div>
+      <div class="full"><label class="form-label">Notes</label><textarea class="inp" id="li-notes" style="min-height:100px" placeholder="What happened?"></textarea></div>
+      <div><label class="form-label">Invoice Ref (optional)</label><input class="inp" id="li-invoice" placeholder="INV-001"/></div>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-primary" onclick="submitLogInteraction()">Save Interaction</button>
+      <button class="btn btn-ghost" onclick="closeModal('log-interaction-modal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT CLIENT MODAL -->
+<div id="edit-client-modal" class="modal-bg" style="display:none" onclick="if(event.target===this)closeModal('edit-client-modal')">
+  <div class="form-modal">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+      <div style="font-family:'DM Serif Display',serif;font-size:20px">Edit Client</div>
+      <button class="btn btn-ghost" onclick="closeModal('edit-client-modal')" style="font-size:16px;padding:3px 10px">×</button>
+    </div>
+    <input type="hidden" id="ec-id"/>
+    <div class="form-grid">
+      <div><label class="form-label">Full Name *</label><input class="inp" id="ec-name"/></div>
+      <div><label class="form-label">Company</label><input class="inp" id="ec-company"/></div>
+      <div><label class="form-label">Client Type</label>
+        <select class="inp" id="ec-type"><option>Homeowner</option><option>Landlord</option><option>Estate Agent</option><option>Letting Agent</option><option>Tenant</option></select>
+      </div>
+      <div><label class="form-label">Service</label>
+        <select class="inp" id="ec-service"><option>Damp Survey</option><option>Mould Survey</option><option>Structural Engineer</option><option>Roof Inspection</option><option>EPC</option><option>EICR (Landlord)</option><option>EICR (Homeowner)</option><option>Gas Safety Check</option></select>
+      </div>
+      <div><label class="form-label">Status</label>
+        <select class="inp" id="ec-status"><option>Inbox</option><option>Waiting</option><option>Active</option><option>Ready</option><option>Done</option><option>Cold Lead</option><option>Past Client</option></select>
+      </div>
+      <div><label class="form-label">Bedrooms</label><input class="inp" id="ec-beds" placeholder="e.g. 3"/></div>
+      <div><label class="form-label">Email</label><input class="inp" id="ec-email" type="email"/></div>
+      <div><label class="form-label">Phone</label><input class="inp" id="ec-phone"/></div>
+      <div class="full"><label class="form-label">Property Address</label><input class="inp" id="ec-address"/></div>
+      <div><label class="form-label">Follow-Up Date</label><input class="inp" id="ec-followup" type="date"/></div>
+      <div><label class="form-label">Source</label>
+        <select class="inp" id="ec-source"><option value="">—</option><option>Referral</option><option>Google</option><option>Instagram</option><option>Estate Agent</option><option>Repeat Client</option><option>Other</option></select>
+      </div>
+      <div><label class="form-label">Invoice Refs</label><input class="inp" id="ec-invoice" placeholder="INV-001"/></div>
+      <div class="full"><label class="form-label">Drive Link</label><input class="inp" id="ec-drive" placeholder="https://drive.google.com/…"/></div>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-primary" onclick="submitEditClient()">Save Changes</button>
+      <button class="btn btn-ghost" onclick="closeModal('edit-client-modal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD JOB MODAL -->
+<div id="add-job-modal" class="modal-bg" style="display:none" onclick="if(event.target===this)closeModal('add-job-modal')">
+  <div class="form-modal">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+      <div style="font-family:'DM Serif Display',serif;font-size:20px">Add Job</div>
+      <button class="btn btn-ghost" onclick="closeModal('add-job-modal')" style="font-size:16px;padding:3px 10px">×</button>
+    </div>
+    <div id="aj-client-name" style="font-size:12px;color:var(--blue);margin-bottom:16px;font-weight:600"></div>
+    <input type="hidden" id="aj-client-id"/>
+    <div class="form-grid">
+      <div><label class="form-label">Invoice / Job Ref</label><input class="inp" id="aj-invoice" placeholder="INV-001"/></div>
+      <div><label class="form-label">Service</label>
+        <select class="inp" id="aj-service"><option>Damp Survey</option><option>Mould Survey</option><option>Structural Engineer</option><option>Roof Inspection</option><option>EPC</option><option>EICR (Landlord)</option><option>EICR (Homeowner)</option><option>Gas Safety Check</option></select>
+      </div>
+      <div class="full"><label class="form-label">Property Address</label><input class="inp" id="aj-address"/></div>
+      <div><label class="form-label">Bedrooms</label><input class="inp" id="aj-beds" placeholder="e.g. 3"/></div>
+      <div><label class="form-label">Job Date</label><input class="inp" id="aj-date" type="date"/></div>
+      <div><label class="form-label">Job Status</label>
+        <select class="inp" id="aj-status"><option>Quote Sent</option><option>Confirmed</option><option>Scheduled</option><option>Completed</option></select>
+      </div>
+      <div class="full"><label class="form-label">Notes</label><textarea class="inp" id="aj-notes" style="min-height:80px"></textarea></div>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-primary" onclick="submitAddJob()">Save Job</button>
+      <button class="btn btn-ghost" onclick="closeModal('add-job-modal')">Cancel</button>
     </div>
   </div>
 </div>
@@ -321,14 +416,48 @@ async function dbInsert(table,data){const{error}=await db.from(table).insert(dat
 async function dbUpdate(table,id,data){const{error}=await db.from(table).update(data).eq("id",id);if(error)throw error;}
 
 // ── Kanban ────────────────────────────────────────────────────────────────────
+let dragClientId=null;
 function renderKanban(){
   const wrap=document.getElementById("kanban");wrap.innerHTML="";
   STATUSES.forEach(s=>{
     const cc=clients.filter(c=>c.status===s.id);
     const col=document.createElement("div");col.className="col";
-    col.innerHTML=`<div class="col-header"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${s.color}"></span><span class="col-title">${s.id}</span><span class="col-count">${cc.length}</span></div>`+
-      cc.map(c=>`<div class="card" onclick="openClient('${c.id}')"><div style="font-weight:600;font-size:12px;margin-bottom:4px">${c.name}</div><div style="display:flex;gap:4px;margin-bottom:5px;flex-wrap:wrap">${c.client_type?`<span class="pill" style="background:${s.bg};color:${s.color}">${c.client_type}</span>`:""}${c.beds?`<span class="pill" style="background:#1A1D2A;color:var(--dim)">${c.beds}bed</span>`:""}</div><div style="font-size:11px;color:var(--blue);margin-bottom:3px">${c.service||""}</div>${c.address?`<div style="font-size:10px;color:#444">📍 ${c.address.substring(0,36)}${c.address.length>36?"…":""}</div>`:""}${c.follow_up?`<div style="font-size:10px;color:var(--orange);margin-top:5px">⏰ ${c.follow_up}</div>`:""}</div>`).join("")+
-      `<div class="col-add" onclick="openAddClient('${s.id}')">+ Add</div>`;
+    col.dataset.status=s.id;
+    // Drop zone events
+    col.addEventListener("dragover",e=>{e.preventDefault();col.style.outline=`2px dashed ${s.color}`;col.style.borderRadius="10px";});
+    col.addEventListener("dragleave",()=>{col.style.outline="none";});
+    col.addEventListener("drop",async e=>{
+      e.preventDefault();col.style.outline="none";
+      if(dragClientId){
+        try{
+          await dbUpdate("clients",dragClientId,{status:s.id});
+          notify(`✓ Moved to ${s.id}`);
+          await loadAll();
+        }catch(err){notify("Error: "+err.message,"error");}
+        dragClientId=null;
+      }
+    });
+    const cards=cc.map(c=>{
+      const div=document.createElement("div");
+      div.className="card";
+      div.draggable=true;
+      div.dataset.id=c.id;
+      div.style.cursor="grab";
+      div.innerHTML=`<div style="font-weight:600;font-size:12px;margin-bottom:4px">${c.name}</div><div style="display:flex;gap:4px;margin-bottom:5px;flex-wrap:wrap">${c.client_type?`<span class="pill" style="background:${s.bg};color:${s.color}">${c.client_type}</span>`:""}${c.beds?`<span class="pill" style="background:#1A1D2A;color:var(--dim)">${c.beds}bed</span>`:""}</div><div style="font-size:11px;color:var(--blue);margin-bottom:3px">${c.service||""}</div>${c.address?`<div style="font-size:10px;color:#444">📍 ${c.address.substring(0,36)}${c.address.length>36?"…":""}</div>`:""}${c.follow_up?`<div style="font-size:10px;color:var(--orange);margin-top:5px">⏰ ${c.follow_up}</div>`:""}`;
+      div.addEventListener("dragstart",e=>{dragClientId=c.id;div.style.opacity="0.45";e.dataTransfer.effectAllowed="move";});
+      div.addEventListener("dragend",()=>{div.style.opacity="1";dragClientId=null;});
+      div.addEventListener("click",()=>openClient(c.id));
+      return div;
+    });
+    const header=document.createElement("div");
+    header.className="col-header";
+    header.innerHTML=`<span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${s.color}"></span><span class="col-title">${s.id}</span><span class="col-count">${cc.length}</span>`;
+    const addBtn=document.createElement("div");
+    addBtn.className="col-add";addBtn.textContent="+ Add";
+    addBtn.onclick=()=>openAddClient(s.id);
+    col.appendChild(header);
+    cards.forEach(c=>col.appendChild(c));
+    col.appendChild(addBtn);
     wrap.appendChild(col);
   });
 }
@@ -358,8 +487,9 @@ function openClient(id){
   const iw=document.getElementById("modal-interactions");
   if(ci.length){iw.style.display="block";document.getElementById("modal-int-list").innerHTML=ci.map(i=>`<div style="display:flex;gap:10px;margin-bottom:8px;font-size:12px;padding-bottom:8px;border-bottom:1px solid var(--border)"><span style="color:#444;white-space:nowrap;min-width:80px">${i.date||""}</span><span style="color:var(--blue);min-width:70px">${i.type||""}</span><span style="color:var(--muted)">${i.notes||""}</span></div>`).join("");}else iw.style.display="none";
   document.getElementById("modal-email-btn").onclick=()=>{showView("email",document.querySelectorAll(".tab")[2]);document.getElementById("email-client").value=c.id;updateEmail();closeModal("client-modal");};
-  document.getElementById("modal-note-btn").onclick=()=>{showView("chat",document.querySelectorAll(".tab")[1]);setHint(`Log interaction with ${c.name}`);closeModal("client-modal");};
-  document.getElementById("modal-status-btn").onclick=()=>{showView("chat",document.querySelectorAll(".tab")[1]);setHint(`Move ${c.name} to `);closeModal("client-modal");};
+  document.getElementById("modal-note-btn").onclick=()=>{openLogInteraction(c.id,c.name);closeModal("client-modal");};
+  document.getElementById("modal-status-btn").onclick=()=>{openEditClient(c.id);closeModal("client-modal");};
+  document.getElementById("modal-job-btn").onclick=()=>{openAddJob(c.id,c.name,c.address,c.beds,c.service);closeModal("client-modal");};
   document.getElementById("client-modal").style.display="flex";
 }
 function closeModal(id){document.getElementById(id).style.display="none";}
@@ -400,7 +530,7 @@ async function sendChat(){
     // Calls our Netlify Function — no CORS issues
     const res=await fetch("/.netlify/functions/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({
       model:"claude-sonnet-4-20250514",max_tokens:1000,
-      system:`You are a CRM assistant for Survey Remedy, a UK property care business.\nServices: ${SERVICES.join(", ")}.\nClients:\n${clientList}\n\nRespond briefly. Include a JSON action in <ACTION> tags when saving data.\nActions:\n- <ACTION>{"type":"add_client","name":"...","client_type":"Homeowner|Landlord|Estate Agent|Letting Agent|Tenant","email":"...","phone":"...","address":"...","beds":"...","service":"...","status":"Inbox","source":"","follow_up":"YYYY-MM-DD or null"}</ACTION>\n- <ACTION>{"type":"log_interaction","client_id":"...","client_name":"...","interaction_type":"Call|Email|WhatsApp|Site Visit|Quote Sent|Invoice Sent|Job Completed","notes":"...","follow_up_date":"YYYY-MM-DD or null","invoice":""}</ACTION>\n- <ACTION>{"type":"update_status","client_id":"...","status":"Inbox|Waiting|Active|Ready|Done|Cold Lead|Past Client"}</ACTION>\n- <ACTION>{"type":"set_followup","client_id":"...","date":"YYYY-MM-DD"}</ACTION>\n- <ACTION>{"type":"add_job","invoice":"...","client_id":"...","client_name":"...","service":"...","address":"...","beds":"...","job_date":"YYYY-MM-DD or null","job_status":"Quote Sent|Confirmed|Scheduled|Completed","notes":""}</ACTION>\nFind client_id from the clients list. Be concise.`,
+      system:`You are a CRM assistant for Survey Remedy, a UK property care business.\nServices: ${SERVICES.join(", ")}.\nClients:\n${clientList}\n\nRespond briefly. Include a JSON action in <ACTION> tags when saving data.\nActions:\n- <ACTION>{"type":"add_client","name":"...","client_type":"Homeowner|Landlord|Estate Agent|Letting Agent|Tenant","email":"...","phone":"...","address":"...","beds":"...","service":"...","status":"Inbox","source":"","follow_up":"YYYY-MM-DD or null"}</ACTION>\n- <ACTION>{"type":"log_interaction","client_id":"...","client_name":"...","interaction_type":"Call|Email|WhatsApp|Site Visit|Quote Sent|Invoice Sent|Job Completed","notes":"...","follow_up_date":"YYYY-MM-DD or null","invoice":""}</ACTION>\n- <ACTION>{"type":"update_status","client_id":"...","status":"Inbox|Waiting|Active|Ready|Done|Cold Lead|Past Client"}</ACTION>\n- <ACTION>{"type":"update_client","client_id":"...","name":"...","email":"...","phone":"...","address":"...","beds":"...","service":"...","client_type":"...","follow_up":"YYYY-MM-DD or null"}</ACTION>\n- <ACTION>{"type":"add_job","invoice":"...","client_id":"...","client_name":"...","service":"...","address":"...","beds":"...","job_date":"YYYY-MM-DD or null","job_status":"Quote Sent|Confirmed|Scheduled|Completed","notes":""}</ACTION>\nFind client_id from the clients list. Be concise.`,
       messages:chatHistory.slice(-10),
     })});
     const data=await res.json();
@@ -421,6 +551,7 @@ async function applyAction(action){
     else if(action.type==="log_interaction"){const newId="L"+String(interactions.length+1).padStart(3,"0");await dbInsert("interactions",{id:newId,client_id:action.client_id||null,client_name:action.client_name||"",date:today,type:action.interaction_type||"Note",notes:action.notes||"",follow_up_date:action.follow_up_date||null,done:"No",invoice:action.invoice||null});if(action.client_id)await dbUpdate("clients",action.client_id,{last_contact:today});notify("✓ Interaction logged");}
     else if(action.type==="update_status"){await dbUpdate("clients",action.client_id,{status:action.status});notify(`✓ Status → ${action.status}`);}
     else if(action.type==="set_followup"){await dbUpdate("clients",action.client_id,{follow_up:action.date});notify(`✓ Follow-up set: ${action.date}`);}
+    else if(action.type==="update_client"){const updates={};["name","email","phone","address","beds","service","client_type","source","follow_up","invoice_refs","drive_link","company"].forEach(f=>{if(action[f]!==undefined)updates[f]=action[f];});await dbUpdate("clients",action.client_id,updates);notify(`✓ ${action.client_id} updated`);}
     else if(action.type==="add_job"){const newId=action.invoice||"J"+String(Date.now()).slice(-6);await dbInsert("jobs",{id:newId,client_id:action.client_id||null,client_name:action.client_name||"",address:action.address||null,beds:action.beds||null,service:action.service||"",job_date:action.job_date||null,status:action.job_status||"Quote Sent",notes:action.notes||null});notify(`✓ Job ${newId} added`);}
     await loadAll();setSyncStatus("synced");
   }catch(e){setSyncStatus("error");notify("Save error: "+e.message,"error");console.error(e);}
@@ -431,7 +562,83 @@ function showView(id,tabEl){["kanban","chat","email","pricing","providers"].forE
 function setSyncStatus(s){const c={idle:"var(--dim)",syncing:"var(--orange)",synced:"var(--emerald)",error:"var(--red)"};const l={idle:"—",syncing:"Saving…",synced:"Synced ✓",error:"Error"};document.getElementById("sync-dot").style.background=c[s];document.getElementById("sync-dot").style.boxShadow=s==="syncing"?`0 0 6px ${c[s]}`:"none";document.getElementById("sync-label").textContent=l[s];}
 function notify(msg,type="success"){const el=document.getElementById("notif");el.textContent=msg;el.style.background=type==="error"?"#E74C3C":"#2ECC71";el.style.color="white";el.style.display="block";setTimeout(()=>{el.style.display="none";},3500);}
 
-document.addEventListener("DOMContentLoaded",()=>{
+// ── Log Interaction ───────────────────────────────────────────────────────────
+function openLogInteraction(clientId,clientName){
+  document.getElementById("li-client-id").value=clientId||"";
+  document.getElementById("li-client-name").textContent=clientName?"For: "+clientName:"";
+  document.getElementById("li-type").value="Call";
+  document.getElementById("li-notes").value="";
+  document.getElementById("li-followup").value="";
+  document.getElementById("li-invoice").value="";
+  document.getElementById("log-interaction-modal").style.display="flex";
+}
+async function submitLogInteraction(){
+  const clientId=document.getElementById("li-client-id").value;
+  const notes=document.getElementById("li-notes").value.trim();
+  if(!notes){notify("Please add some notes","error");return;}
+  const today=new Date().toISOString().split("T")[0];
+  const newId="L"+String(interactions.length+1).padStart(3,"0");
+  const clientName=clients.find(c=>c.id===clientId)?.name||"";
+  try{
+    await dbInsert("interactions",{id:newId,client_id:clientId||null,client_name:clientName,date:today,type:document.getElementById("li-type").value,notes,follow_up_date:document.getElementById("li-followup").value||null,done:"No",invoice:document.getElementById("li-invoice").value||null});
+    if(clientId)await dbUpdate("clients",clientId,{last_contact:today,follow_up:document.getElementById("li-followup").value||null});
+    notify("✓ Interaction logged");closeModal("log-interaction-modal");await loadAll();
+  }catch(e){notify("Error: "+e.message,"error");}
+}
+
+// ── Edit Client ───────────────────────────────────────────────────────────────
+function openEditClient(clientId){
+  const c=clients.find(c=>c.id===clientId);if(!c)return;
+  document.getElementById("ec-id").value=c.id;
+  document.getElementById("ec-name").value=c.name||"";
+  document.getElementById("ec-company").value=c.company||"";
+  document.getElementById("ec-type").value=c.client_type||"Homeowner";
+  document.getElementById("ec-service").value=c.service||"Damp Survey";
+  document.getElementById("ec-status").value=c.status||"Inbox";
+  document.getElementById("ec-beds").value=c.beds||"";
+  document.getElementById("ec-email").value=c.email||"";
+  document.getElementById("ec-phone").value=c.phone||"";
+  document.getElementById("ec-address").value=c.address||"";
+  document.getElementById("ec-followup").value=c.follow_up||"";
+  document.getElementById("ec-source").value=c.source||"";
+  document.getElementById("ec-invoice").value=c.invoice_refs||"";
+  document.getElementById("ec-drive").value=c.drive_link||"";
+  document.getElementById("edit-client-modal").style.display="flex";
+}
+async function submitEditClient(){
+  const id=document.getElementById("ec-id").value;
+  const name=document.getElementById("ec-name").value.trim();
+  if(!name){notify("Name is required","error");return;}
+  try{
+    await dbUpdate("clients",id,{name,company:document.getElementById("ec-company").value||null,client_type:document.getElementById("ec-type").value,service:document.getElementById("ec-service").value,status:document.getElementById("ec-status").value,beds:document.getElementById("ec-beds").value||null,email:document.getElementById("ec-email").value||null,phone:document.getElementById("ec-phone").value||null,address:document.getElementById("ec-address").value||null,follow_up:document.getElementById("ec-followup").value||null,source:document.getElementById("ec-source").value||null,invoice_refs:document.getElementById("ec-invoice").value||null,drive_link:document.getElementById("ec-drive").value||null});
+    notify("✓ Client updated");closeModal("edit-client-modal");await loadAll();
+  }catch(e){notify("Error: "+e.message,"error");}
+}
+
+// ── Add Job ───────────────────────────────────────────────────────────────────
+function openAddJob(clientId,clientName,address,beds,service){
+  document.getElementById("aj-client-id").value=clientId||"";
+  document.getElementById("aj-client-name").textContent=clientName?"For: "+clientName:"";
+  document.getElementById("aj-address").value=address||"";
+  document.getElementById("aj-beds").value=beds||"";
+  document.getElementById("aj-service").value=service||"Damp Survey";
+  document.getElementById("aj-invoice").value="";
+  document.getElementById("aj-date").value="";
+  document.getElementById("aj-status").value="Quote Sent";
+  document.getElementById("aj-notes").value="";
+  document.getElementById("add-job-modal").style.display="flex";
+}
+async function submitAddJob(){
+  const clientId=document.getElementById("aj-client-id").value;
+  const clientName=clients.find(c=>c.id===clientId)?.name||document.getElementById("aj-client-name").textContent.replace("For: ","");
+  const invoice=document.getElementById("aj-invoice").value.trim()||"J"+String(Date.now()).slice(-6);
+  try{
+    await dbInsert("jobs",{id:invoice,client_id:clientId||null,client_name:clientName,address:document.getElementById("aj-address").value||null,beds:document.getElementById("aj-beds").value||null,service:document.getElementById("aj-service").value,job_date:document.getElementById("aj-date").value||null,status:document.getElementById("aj-status").value,notes:document.getElementById("aj-notes").value||null});
+    notify(`✓ Job ${invoice} added`);closeModal("add-job-modal");await loadAll();
+  }catch(e){notify("Error: "+e.message,"error");}
+}
+
+
   const tbody=document.getElementById("pricing-body");
   PRICING.forEach((row,i)=>{const tr=document.createElement("tr");tr.style.background=i%2===0?"var(--bg)":"#0D1018";tr.innerHTML=`<td style="font-size:12px;font-weight:600;color:var(--muted);padding:10px 12px">${row.s}</td>`+row.p.map(v=>`<td style="text-align:center;padding:10px 12px"><span class="${v==="POA"?"price-poa":"price-val"}">${v}</span></td>`).join("")+`<td style="text-align:center;font-size:11px;color:var(--dim);font-style:italic;padding:10px 12px">${row.d}</td>`;tbody.appendChild(tr);});
   addBubble("assistant","Hi! Your Survey Remedy CRM is ready.\n\nTry:\n• \"New client: John Smith, landlord, john@email.com, 07700 123456, 3-bed EICR in Brixton\"\n• \"Log call with John Smith – confirmed the quote\"\n• \"Move John Smith to Active\"\n• \"Follow up with John Smith on 20th March\"\n\nOr click + Add on any board column.");
